@@ -1,0 +1,2 @@
+db_module=tgvote.model
+history_dir=$base/tgvote/sqlobject-history
