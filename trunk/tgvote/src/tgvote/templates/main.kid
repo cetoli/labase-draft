@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h4><a py:content="next_text" py:attrs="href=std.url('/'+next_url)">Proximo Passo</a></h4>
+    <h2 py:content="use_case"></h2>
 
     <p py:content="form(submit_text='Confirma')">Use Case form</p>
 
