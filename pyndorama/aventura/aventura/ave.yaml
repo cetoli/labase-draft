@@ -1,0 +1,71 @@
+- Z:
+  - [z]
+  - L:
+    - [RIO, VOCE ESTA PERTO DE UM RIO SECO]
+    - O:
+      - [PEDR,PEDRINHAS]
+      - V:
+        - [PEGU]
+        - A:
+          - [PEDRINHAS]
+        - S:
+          - [AGUA]        
+        - P:
+          - [PEDR, VOCE PEGA AS PEDRINHAS]        
+      - V:
+        - [SOLT]
+        - A:
+          - [PEDRINHAS]        
+        - S:
+          - [AGUA]                
+        - T:
+          - [PEDR, VOCE SOLTOU AS PEDRINHAS]
+    - O:
+      - [FOLH,FOLHAS AMARELADAS]
+      - V:
+        - [PEGUE, AS FOLHAS ESTAO SECAS...]
+    - O:
+      - [VALE,VALE]
+      - V:
+        - [VOE]
+        - M:
+          - [VALE]
+  - L:
+    - [JARR, VOCE ESTA POUSADO NA BOCA DA JARRA]
+    - O:
+      - [AGUA,AGUA FRESCA]
+      - V:
+        - [BEBA]
+        - F:
+          - [x,'VOCE CONSEGUIU BEBER A AGUA!']
+        - S:
+          - [PEDR, A AGUA ESTA NO FUNDO DA JARRA.]   
+    - O:
+      - [VALE,VALE]
+      - V:
+        - [VOE]
+        - M:
+          - [VALE]
+  - L:
+    - [VALE, VOCE ESTA EM UM IMENSO VALE]
+    - O:
+      - [JARR, UMA JARRA COM UM POUCO DE AGUA NO FUNDO]
+      - V:
+        - [BEBA, 'A AGUA ESTA NO FUNDO, VOCE NAO CONSEGUE BEBER']
+      - V:
+        - [PEGU, 'A JARRA E MUITO PESADA!']
+      - V:
+        - [VOE]
+        - A:
+          - [AGUA]
+        - M:
+          - [JARRA]
+    - O:
+      - [ARVO, UMA ARVORE FRONDOSA]
+    - O:
+      - [RIO, UM RIO SECO]
+      - V:
+        - [VOE]
+        - M:
+          - [RIO]
+
