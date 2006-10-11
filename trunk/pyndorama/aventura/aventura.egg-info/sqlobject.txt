@@ -1,0 +1,2 @@
+db_module=aventura.model
+history_dir=$base/aventura/sqlobject-history
