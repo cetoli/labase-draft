@@ -51,18 +51,22 @@ class CadastroDePleito(widgets.WidgetsList):
     descricao = widgets.TextField(validator=validators.NotEmpty(),attrs={'size':80})
     data_inicio = widgets.CalendarDatePicker('data_inicio')
     data_fim = widgets.CalendarDatePicker('data_fim')
+class CadastraCandidatura(widgets.WidgetsList):
+    opleito = widgets.TextField(attrs={'size':2})
+    candidato = widgets.TextField(attrs={'size':80})
+    campanha = widgets.TextField(attrs={'size':80})
 class CadastroDeCandidatura(widgets.WidgetsList):
     NumPleito = widgets.Label(default="Sample Label")
-    Pleito = widgets.Label(default="Sample Label")
-    Candidato = widgets.TextField(default="Sample Label")
-    Campanha = widgets.TextField(attrs={'size':80})
+    opleito = widgets.Label(default="Sample Label")
+    candidato = widgets.TextField(default="Sample Label")
+    campanha = widgets.TextField(attrs={'size':80})
     def monta(self,pleito =''):
       self[0] = widgets.Label(default="Pleito: "+str(pleito))
       if pleito:
-        self[1] = widgets.HiddenField(name="Pleito",default=str(pleito))
+        self[1] = widgets.HiddenField(name="opleito",default=str(pleito))
       else:
-        self[1] = widgets.TextField(name="Pleito")
-      self[2]= widgets.SingleSelectField("Cidadao", 
+        self[1] = widgets.TextField(name="opleito")
+      self[2]= widgets.SingleSelectField("cidadao", 
                    options=[(-1, "NenhumEleitor_")]
                    +[(indice, candidato["Eleitor_"]) for indice,candidato in enumerate(cidadao)],
                                    default=0)
@@ -168,27 +172,26 @@ class Root(controllers.RootController):
     def cadastra_candidato(self):
       tb = candidato
       return dict(
-                    form=CadastroDeCandidatura().monta()
-                    ,next_text='Cadastra Pleito'
+                    form=CadastraCandidatura()
+                    ,next_text='Cadastra Candidatura'
                     ,next_url='index'
                     ,use_case='Cadastro De Candidatura')
     @expose(template="tgvote.templates.main")
     def adiciona_candidato(self,chave):
       tb = candidato
-      pleito = int(chave)
-#      candidatosAoPleito= tb and tb.get(pleito) or [tb.__setitem__(pleito,[])] and tb[pleito]
       return dict(
                     form=CadastroDeCandidatura().monta(chave)
                     ,next_text='Cadastra Pleito'
                     ,next_url='index'
                     ,use_case='Cadastro De Candidatura ao Pleito'+chave)
+
     @expose(template="tgvote.templates.main")
-    def salva_candidato(self,Candidato,Campanha,Pleito):
-      tb = candidato
-      pleito = int(chave)
-      candidatosAoPleito= tb and tb.get(pleito) or [tb.__setitem__(pleito,[])] and tb[pleito]
-      candidatosAoPleito += [{'Candidato':Candidato,'Campanha':Campanha}]
-      log.debug("Candidato: %s,Campanha: %s,Pleito: %s"%(Candidato,Campanha,Pleito))
+    def salva_candidato(self,candidato,campanha,opleito):
+      tb = pleito
+      estepleito = tb[opleito]
+      #candidatosAoPleito= tb and tb.get(pleito) or [tb.__setitem__(pleito,[])] and tb[pleito]
+      #candidatosAoPleito += [{'Candidato':Candidato,'Campanha':Campanha}]
+      log.debug("Candidato: %s,Campanha: %s,Pleito: %s"%(candidato,campanha,opleito))
       return dict(
                     form=Dados().monta(tb)
                     ,next_text='Cadastra Pleito'
