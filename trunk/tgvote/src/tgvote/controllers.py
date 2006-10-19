@@ -17,6 +17,7 @@ candidato = {}
 menu = [{'Eleicao':'index'
                 ,'Pleitos':'mostra_pleitos'
                 ,'Eleitores':'mostra_eleitores'
+                ,'Candidatos':'cadastra_candidato'
                 }]
 
 def add_custom_stdvars(vars):
@@ -55,9 +56,12 @@ class CadastroDeCandidatura(widgets.WidgetsList):
     Pleito = widgets.Label(default="Sample Label")
     Candidato = widgets.TextField(default="Sample Label")
     Campanha = widgets.TextField(attrs={'size':80})
-    def monta(self,pleito):
+    def monta(self,pleito =''):
       self[0] = widgets.Label(default="Pleito: "+str(pleito))
-      self[1] = widgets.HiddenField(name="Pleito",default=str(pleito))
+      if pleito:
+        self[1] = widgets.HiddenField(name="Pleito",default=str(pleito))
+      else:
+        self[1] = widgets.TextField(name="Pleito")
       self[2]= widgets.SingleSelectField("Cidadao", 
                    options=[(-1, "NenhumEleitor_")]
                    +[(indice, candidato["Eleitor_"]) for indice,candidato in enumerate(cidadao)],
@@ -160,6 +164,14 @@ class Root(controllers.RootController):
                     ,next_text='Cadastra Pleito'
                     ,next_url='index'
                     ,use_case='Listagem dos Pleitos')
+    @expose(template="tgvote.templates.main")
+    def cadastra_candidato(self):
+      tb = candidato
+      return dict(
+                    form=CadastroDeCandidatura().monta()
+                    ,next_text='Cadastra Pleito'
+                    ,next_url='index'
+                    ,use_case='Cadastro De Candidatura')
     @expose(template="tgvote.templates.main")
     def adiciona_candidato(self,chave):
       tb = candidato
