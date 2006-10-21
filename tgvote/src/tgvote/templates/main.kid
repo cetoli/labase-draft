@@ -9,9 +9,12 @@
 </head>
 
 <body>
-    <h2 py:content="use_case"></h2>
+  <div  id="outer">
+    <h2 id="ucase" py:content="use_case"></h2>
+   <div  id="ubody" >
 
-    <p py:content="form(submit_text='Confirma')">Use Case form</p>
-
+    <p py:content="form()">Use Case form</p>
+   </div>
+  </div>
 </body>
 </html>

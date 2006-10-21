@@ -14,27 +14,60 @@
             text-align: right;
         }
         #item {
-	float: left;
-	padding: 2px 2% 2px 2%;
-	margin: 2px 1% 2px 2%;
-	background: #ccc;
-	border: 1px solid #eee;
-	width: 10%; /* ie5win fudge begins */
-	voice-family: "\"}\"";
-	voice-family:inherit;
-	width: 10%;
-	}
-    #menuer {
-	float: left;
-	padding: 1px 2% 1px 2%;
-	margin: 2px 0px 2px 1%;
-	background: #aaa;
-	border: 1px solid #ccc;
-	width: 70%; /* ie5win fudge begins */
-	voice-family: "\"}\"";
-	voice-family:inherit;
-	width: 70%;
-	}
+			float: left;
+			padding: 2px 2px 2px 1px;
+			margin: 2px 1% 2px 1px;
+			background: #ccc;
+			border: 1px solid #eee;
+			width: 15%; /* ie5win fudge begins */
+			voice-family: "\"}\"";
+			voice-family:inherit;
+			width: 15%;
+		}
+	    #menuer {
+			float: left;
+			padding: 1px 2% 1px 4px;
+			margin: 2px 0px 2px 1%;
+			background: #aaa;
+			border: 1px solid #ccc;
+			width: 70%; /* ie5win fudge begins */
+			voice-family: "\"}\"";
+			voice-family:inherit;
+			width: 70%;
+		}
+	    #outer {
+			float: left;
+			padding: 1px 2% 1px 4px;
+			margin: 2px 0px 2px 1%;
+			background: #ddd;
+			border: 1px solid #ccc;
+			width: 70%; /* ie5win fudge begins */
+			voice-family: "\"}\"";
+			voice-family:inherit;
+			width: 70%;
+		}
+	    #ucase {
+			float: left;
+			padding: 1px 2% 1px 4px;
+			margin: 2px 0px 2px 1%;
+			background: #eee;
+			border: 1px solid #ccc;
+			width: 90%; /* ie5win fudge begins */
+			voice-family: "\"}\"";
+			voice-family:inherit;
+			width: 90%;
+		}
+	    #ubody {
+			float: left;
+			padding: 1px 2% 1px 4px;
+			margin: 2px 0px 2px 1%;
+			background: #fff;
+			border: 1px solid #ccc;
+			width: 90%; /* ie5win fudge begins */
+			voice-family: "\"}\"";
+			voice-family:inherit;
+			width: 90%;
+		}
         
     </style>
 </head>
