@@ -1,8 +1,0 @@
-from sqlobject import *
-
-from turbogears.database import PackageHub
-
-hub = PackageHub("tgvote")
-__connection__ = hub
-
-
