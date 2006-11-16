@@ -85,3 +85,6 @@ class Test_Clazz(unittest.TestCase):
     self.assertEquals(12,fromclazz.x,
       "deveria ter movido destino mas foi %s"%fromclazz.x)
 
+if __name__ == "__main__":
+    unittest.main()
+    
