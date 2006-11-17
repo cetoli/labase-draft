@@ -85,6 +85,24 @@ class Test_Clazz(unittest.TestCase):
     self.assertEquals(12,fromclazz.x,
       "deveria ter movido destino mas foi %s"%fromclazz.x)
 
+  def test_insert_clazz_in_clazz(self):
+    fromclazz = Clazz((20,20),parent=self.clazz)
+    self.clazz.insert(fromclazz)
+    linkedclazzes = [link.froms for link in self.clazz.link]
+    dimension = self.clazz.getDimension()
+    self.assertTrue(fromclazz in linkedclazzes,
+      "fromclazz should be one of: %s"%str(linkedclazzes))
+    self.assertEquals(1,dimension,
+      "dimension shoud be 1 but was: %d"%dimension)
+    fromclazz = Clazz((20,20),parent=self.clazz)
+    self.clazz.insert(fromclazz)
+    linkedclazzes = [link.froms for link in self.clazz.link]
+    dimension = self.clazz.getDimension()
+    self.assertTrue(fromclazz in linkedclazzes,
+      "fromclazz should be one of: %s"%str(linkedclazzes))
+    self.assertEquals(2,dimension,
+      "dimension shoud be 2 but was: %d"%dimension)
+
 if __name__ == "__main__":
     unittest.main()
     
