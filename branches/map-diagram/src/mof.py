@@ -17,13 +17,18 @@ from random import randint
 from time import sleep
 from router import Wire
 
+class NullNode:
+  'Null Node used as parent of root class'
+  def pos(self): return (0,0)
+  def parent(self): return self
 class Clazz:
     clazzid = 0
-    def __init__(self, origin=(0,0)):
+    def __init__(self, origin=(0,0),parent=NullNode()):
       self.x ,self.y = origin
       self.idc = Clazz.clazzid
       Clazz.clazzid += 1
       self.link =[]
+      self.dimension = 1
       self.getLink(self)
     def add(self, link):
       self.link +=[link]
@@ -37,6 +42,17 @@ class Clazz:
       self.x = min( abs(self.x + x), Diagram.sz)
       self.y = min( abs(self.y + y), Diagram.sz)
       return self.x,self.y
+    def getDimension(self):
+      return self.dimension
+    def redimension(self):
+      suppressed_redimension_method= self.redimension
+      self.redimension= lambda self=self: 0
+      self.dimension = sum([link.redimension() for link in self.link])or 1
+      self.redimension=suppressed_redimension_method
+      return self.dimension
+    def insert(self,node):
+      self.getLink(node)
+      self.redimension()
     def pos(self):
       return self.x, self.y
     def relax(self,froms):
@@ -50,6 +66,16 @@ class Clazz:
       desired_dy = (len_y *force)/Diagram.damp
       self.move(-desired_dx,-desired_dy)
       froms.move(desired_dx,desired_dy)
+  def draw(self,gc=None,offset=(0,0)):
+    suppressed_draw_method= self.draw
+    self.draw= lambda self=self,gc,offset: 0
+    gc.draw(self.pos(),'*')
+    nextoffset=(offset[0]+1,offset[1]-self.dimension/2)
+    def calculate_and_draw(node):
+      node.draw(gc,offset=nextoffset)
+      nextoffset=(nextoffset[0],nextoffset[1]+node.getDimension)
+    [calculate_and_draw(node) for node in self.link]
+    self.draw=suppressed_draw_method
 
 class Link:
     linkid = 0
@@ -60,6 +86,8 @@ class Link:
       self.froms = froms
     def x(self):
       return self.clazz.x
+    def redimension(self):
+      return self.froms.redimension()
       
     def move(self, x, y):
       self.move = lambda x,y: None
@@ -78,6 +106,10 @@ class Link:
 
     def linker(self):
       return self.froms.pos(),self.clazz.pos()
+    def draw(self,gc=None,offset=(0,0)):
+      Wire(wire=link.linker()).draw(gc)
+      self.froms.draw(gc,offset)
+
 
 class Diagram:
   damp = 4
@@ -89,6 +121,7 @@ class Diagram:
     M_T = 20
     self.t = M_T
     self.anneal= 0
+    self.current = Clazz()
     def rnf():
       return randint(0,sz),randint(0,sz)
     def makeLink(clazzes):
@@ -101,7 +134,9 @@ class Diagram:
       return link
     self.clazzes = [Clazz(rnf()) for clazzes in range (0,MAX_CLAZZES)]
     self.links = [makeLink(self.clazzes) for links in range(0,MAX_LINKS)]
-  
+  def insert(self):
+    self.current = self.current.insert(Clazz(parent=self.current))
+    
   def draw(self,gc=None):
     x,y=(0,0)
     if self.t > 0:
