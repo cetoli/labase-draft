@@ -34,7 +34,7 @@ class GtkGui:
       window.set_title("Diagrama")
       window.connect("destroy", lambda w: gtk.main_quit())
       self.area = gtk.DrawingArea()
-      self.area.set_size_request(600, 600)
+      self.area.set_size_request(800, 600)
       window.add(self.area)
       self.area.set_events(gtk.gdk.POINTER_MOTION_MASK |
                            gtk.gdk.POINTER_MOTION_HINT_MASK )
