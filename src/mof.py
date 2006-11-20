@@ -22,58 +22,60 @@ class NullNode:
   def pos(self): return (0,0)
   def parent(self): return self
 class Clazz:
-    clazzid = 0
-    def __init__(self, origin=(0,0),parent=NullNode()):
-      self.x ,self.y = origin
-      self.idc = Clazz.clazzid
-      Clazz.clazzid += 1
-      self.link =[]
-      self.dimension = 1
-      self.getLink(self)
-    def add(self, link):
-      self.link +=[link]
-    def getLink(self, froms):
-      link = Link(self,froms)
-      self.add(link)
-      return link
-    def linkTo(self,clazz):
-      self.link += [clazz.getLink(self)]
-    def move(self, x, y):
-      self.x = min( abs(self.x + x), Diagram.sz)
-      self.y = min( abs(self.y + y), Diagram.sz)
-      return self.x,self.y
-    def getDimension(self):
-      return self.dimension
-    def redimension(self):
-      suppressed_redimension_method= self.redimension
-      self.redimension= lambda self=self: 0
-      self.dimension = sum([link.redimension() for link in self.link])or 1
-      self.redimension=suppressed_redimension_method
-      return self.dimension
-    def insert(self,node):
-      self.getLink(node)
-      self.redimension()
-    def pos(self):
-      return self.x, self.y
-    def relax(self,froms):
-      'Tenta manter as classes separadas por uma distancia de oito'
-      len_x = self.x - froms.x or 1
-      len_y = self.y - froms.y or 1
-      distance = (abs(len_x)+abs(len_y)) or 1
-      if distance >= 8: return
-      force = 2*(distance -8)/distance
-      desired_dx = (len_x * force)/Diagram.damp
-      desired_dy = (len_y *force)/Diagram.damp
-      self.move(-desired_dx,-desired_dy)
-      froms.move(desired_dx,desired_dy)
+  clazzid = 0
+  def __init__(self, origin=(0,0),parent=NullNode()):
+    self.x ,self.y = origin
+    self.idc = Clazz.clazzid
+    Clazz.clazzid += 1
+    self.link =[]
+    self.dimension = 1
+    self.getLink(self)
+  def add(self, link):
+    self.link +=[link]
+  def getLink(self, froms):
+    link = Link(self,froms)
+    self.add(link)
+    return link
+  def linkTo(self,clazz):
+    self.link += [clazz.getLink(self)]
+  def move(self, x, y):
+    self.x = min( abs(self.x + x), Diagram.sz)
+    self.y = min( abs(self.y + y), Diagram.sz)
+    return self.x,self.y
+  def getDimension(self):
+    return self.dimension
+  def redimension(self):
+    suppressed_redimension_method= self.redimension
+    self.redimension= lambda self=self: 0
+    self.dimension = sum([link.redimension() for link in self.link]) or 1
+    self.redimension=suppressed_redimension_method
+    return self.dimension
+  def insert(self,node):
+    self.getLink(node)
+    self.redimension()
+    return node
+  def pos(self):
+    return self.x, self.y
+  def relax(self,froms):
+    'Tenta manter as classes separadas por uma distancia de oito'
+    len_x = self.x - froms.x or 1
+    len_y = self.y - froms.y or 1
+    distance = (abs(len_x)+abs(len_y)) or 1
+    if distance >= 8: return
+    force = 2*(distance -8)/distance
+    desired_dx = (len_x * force)/Diagram.damp
+    desired_dy = (len_y *force)/Diagram.damp
+    self.move(-desired_dx,-desired_dy)
+    froms.move(desired_dx,desired_dy)
   def draw(self,gc=None,offset=(0,0)):
     suppressed_draw_method= self.draw
-    self.draw= lambda self=self,gc,offset: 0
+    self.draw= lambda gc,offset,self=self: 0
+    self.x,self.y=offset
     gc.draw(self.pos(),'*')
-    nextoffset=(offset[0]+1,offset[1]-self.dimension/2)
+    self.nextoffset=(offset[0]+10,offset[1]-self.dimension)
     def calculate_and_draw(node):
-      node.draw(gc,offset=nextoffset)
-      nextoffset=(nextoffset[0],nextoffset[1]+node.getDimension)
+      node.draw(gc,offset=self.nextoffset)
+      self.nextoffset=(self.nextoffset[0],self.nextoffset[1]+(node.froms.getDimension() or 2))
     [calculate_and_draw(node) for node in self.link]
     self.draw=suppressed_draw_method
 
@@ -107,7 +109,7 @@ class Link:
     def linker(self):
       return self.froms.pos(),self.clazz.pos()
     def draw(self,gc=None,offset=(0,0)):
-      Wire(wire=link.linker()).draw(gc)
+      Wire(wire=self.linker()).draw(gc)
       self.froms.draw(gc,offset)
 
 
@@ -121,7 +123,8 @@ class Diagram:
     M_T = 20
     self.t = M_T
     self.anneal= 0
-    self.current = Clazz()
+    self.current = Clazz(origin=(10,10))
+    self.root = self.current
     def rnf():
       return randint(0,sz),randint(0,sz)
     def makeLink(clazzes):
@@ -132,26 +135,29 @@ class Diagram:
       link = clazzes[origin].getLink(clazzes[target])
       clazzes[target].add(link)
       return link
-    self.clazzes = [Clazz(rnf()) for clazzes in range (0,MAX_CLAZZES)]
-    self.links = [makeLink(self.clazzes) for links in range(0,MAX_LINKS)]
+    #self.clazzes = [Clazz(rnf()) for clazzes in range (0,MAX_CLAZZES)]
+    #self.links = [makeLink(self.clazzes) for links in range(0,MAX_LINKS)]
+    old = self.current
+    self.insert()
+    self.current = old
+    self.insert()
+    self.current = old
+    self.insert()
+    self.current = old
+    def travel(root,go):
+      if go <=0: return
+      node = root
+      for x in range(randint(0,4)):
+        node = node.link[randint(0,len(node.link)-1)].froms
+        node= node.insert(Clazz(parent=node))
+        travel(node,go-1)
+    [ travel(self.current,2) for x in range(9)]
   def insert(self):
     self.current = self.current.insert(Clazz(parent=self.current))
     
   def draw(self,gc=None):
     x,y=(0,0)
-    if self.t > 0:
-      x,y = randint(-self.t,self.t),randint(-self.t,self.t)
-      self.clazzes[self.anneal].move(x,y)
-      self.anneal +=1
-      if self.anneal >= len(self.clazzes):
-        self.anneal =0
-        self.t -= 1
-        Diagram.damp +=1
-    [link.relax() for link in self.links]
-    [[clazz.relax(froms) for froms in self.clazzes] for clazz in self.clazzes]
-    [gc.draw(clazz.pos(),'*') for clazz in self.clazzes]
-    #[gc.linker(link.linker()) for link in self.links] # em linha reta
-    [Wire(wire=link.linker()).draw(gc) for link in self.links] #em angulos retos
+    self.root.draw(gc,offset=(2,10))
     gc.do_draw()
     sleep(0.6)
 
