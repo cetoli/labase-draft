@@ -13,6 +13,40 @@
             font-family: verdana;
             text-align: right;
         }
+        #book
+        {
+            background-image:url(/static/images/book.jpg);
+	padding: 20px 2% 20px 2%;
+	margin: 10px 150px 10px 10px;
+	border: 3px solid #eee;
+	width: 750px;
+	height: 400px;
+        }
+        #fabletext {
+        float:left;
+              /* top right bottom left */
+	padding: 50px 10px 10px 10px ;
+	margin: 50px 0px 10px 50px ;
+	border: 0px solid #eee;
+	width: 300px;
+	height: 200px;
+	}
+        #fableview {
+        float:left;
+	padding: 50px 10px 10px 10px ;
+	margin: 50px 0px 10px 20px ;
+	border: 0px solid #eee;
+	width: 250px;
+	height: 200px;
+	}
+        #fableaction {
+        float:left;
+        background-color:transparent;
+	padding: 30px 10px 10px 90px ;
+	margin: 10px 60px 10px 50px ;
+	border: 0px solid #eee;
+	height: 20px;
+	}
     </style>
 </head>
 
@@ -28,9 +62,9 @@
         </span>
     </div>
 
-    <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+    <!--<div py:if="tg_flash" class="flash" py:content="tg_flash"></div> -->
 
-    <div py:replace="[item.text]+item[:]"/>
+    <div id="book" py:replace="[item.text]+item[:]"/>
 
     <p align="center"><img src="/static/images/labase.gif" alt="Labase"/></p>
 </body>

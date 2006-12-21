@@ -15,7 +15,7 @@ which you should have received as part of this distribution.
 """
 import util
 import yaml
-import PyRSS2Gen
+#import PyRSS2Gen
 import datetime
 
 __author__  = "Carlo E. T. Oliveira (cetoli@yahoo.com.br) $Author: carlo $"
@@ -379,8 +379,9 @@ for t in range (ord('A'),ord('Z')):
   if chr(t) not in g.keys():
     g[chr(t)] = type(chr(t), (Thing,), {})
   
-def load():
-  return load_yaml(yaml.load(file('/home/livia/aventura/aventura/ave.yaml', 'r'))[0])
+def load(aventura='ave.yaml'):
+  #return load_yaml(yaml.load(file('/home/carlo/Desktop/old/pyndorama/aventura/aventura/ave.yaml', 'r'))[0])
+  return load_yaml(yaml.load(file('/home/carlo/Desktop/old/pyndorama/aventura/aventura/'+aventura, 'r'))[0])
 def load_yaml(thing):
   global g
   thing_name = thing.keys()[0]

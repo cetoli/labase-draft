@@ -10,15 +10,8 @@
 <body>
   <div id="book">
          <PRE id="fabletext">
-          ${text}
+          <div py:content="form()"/>
          </PRE>
-         <img id="fableview" src='${image}'/>     
-    <form action="acao" method="POST">
-      <div id="fableaction">
-        <input  type="text" name="query" value=""/>
-        <input type="submit" value="Ação!!!"/>        
-      </div>
-    </form>
   </div>
 </body>
 </html>
