@@ -1,0 +1,182 @@
+- Z:
+  - [z]
+  - L:
+    - [SAL3, VOCE ENTRA NUM CORREDOR]
+    - O:
+      - [VELA]
+      - V:
+        - [PEGAR]
+        - P:
+          - [VELA, VOCE PEGOU A VELA]
+        - A:
+          - [VELA]
+    - O:
+      - [FREN, ENTRADA A FRENTE]
+      - V:
+        - [IR]
+        - M:
+          - [SAL6]
+    - O:
+      - [DIRE, ENTRADA A DIREITA]
+      - V:
+        - [IR]
+        - M:
+          - [SAL1]
+  - L:
+    - [SAL2, VOCE CHEGA A UMA SALA AMPLA.]
+    - O:
+      - [ESQU, UMA ENTRADA A ESQUERDA]
+      - V:
+        - ['IR ']
+        - M:
+          - [SAL1]
+    - O:
+      - [FREN, UMA ENTRADA A FRENTE]
+      - V:
+        - [IR]
+        - M:
+          - [SAL4]
+    - O:
+      - [MENSAGEM, 'UM PEDACO DE PAPEL']
+      - V:
+        - [EXAMINAR, NA MENSAGEM DIZ]
+  - L:
+    - [SAL4, VOCE ENTRA NUMA SALA MUITO ESCURA. VOCE MAL CONSEGUE ENXERGAR ALGUMA
+        COISA.]
+    - O:
+      - [ESQU, UMA PASSAGEM A ESQUERDA]
+      - V:
+        - [IR, 'AS SALA ESTA MUITO ESCURA.VOCE TEM CERTEZA QUE QUER ATRAVESSAR?']
+        - S:
+          - [VELA, "VOCE USA A VELA PARA ATRAVESSAR A SALA EM SEGURANCA"]
+    - O:
+      - ['ATRA ', "ENTRADA ATRAS"]
+      - V:
+        - [IR]
+        - M:
+          - [SAL2]
+  - L:
+    - [SAL5, VOCE CHEGA A UMA SALA EM RUINAS]
+    - O:
+      - [PEDR, UMA PEDRA PESADA]
+      - V:
+        - [PEGA]
+        - P:
+          - [PEDR, VOCE PEGOU A PEDRA]
+        - A:
+          - [PEDR]
+    - O:
+      - [FREN, UMA ENTRADA A FRENTE]
+      - V:
+        - [IR]
+        - M:
+          - [SAL8]
+    - O:
+      - [SAL4, UMA PASSAGEM A DIREITA]
+      - V:
+        - [IR]
+        - M:
+          - [SAL4]
+  - L:
+    - [SAL6, VOCE CHEGA A UMA SALA COM UM PEDESTAL NO CENTRO]
+    - O:
+      - [ALTAR, ALTAR COM UMA CHAVE VERMELHA]
+    - O:
+      - [VERM, 'CHAVE VERMELHA']
+      - V:
+        - [PEGA, 'HUMMM...A SUPERFICIE ONDE ESTA A  CHAVE PARECE SUSPEITA.VOCE TEM
+            CERTEZA QUE VAI QUERER PEGAR?']
+        - A:
+          - [VERM]
+        - P:
+          - [VERM]
+    - O:
+      - [FREN, "UMA ENTRADA A FRENTE"]
+      - V:
+        - [IR]
+        - M:
+          - [SAL9]
+  - L:
+    - [SAL7, 'ATRAVESSANDO O TUNEL,VOCE CHEGA A UMA SALA SECRETA']
+    - O:
+      - [BAU, UM PEQUENO BAU COM FECHADURA VERMELHA]
+      - V:
+        - [ABRI]
+        - P:
+          - [AZUL, 'VOCE ABRIU O BAU COM A CHAVE VERMELHA, ENCONTROU UMA
+              CHAVE AZUL E A PEGOU.']
+        - E:
+          - [AZUL, 'CHAVE AZUL']
+        - S:
+          - [VERM, 'VOCE NAO CONSEGUE ABRIR O BAU, ELE ESTA TRANCADO!']
+    - O:
+      - [AZUL, '']
+    - O:
+      - [PARE, 'UMA PAREDE']
+      - V:
+        - [EXAM, 'VOCE PERCEBE QUE HA UM TIJOLO SOBRESSAINDO...']
+    - O:
+      - [TIJO]
+      - V:
+        - [EMPU, 'UM ALCAPAO SE ABRE E VOCE CAI!']
+        - M:
+          - [SAL5]
+  - L:
+    - [SAL8, VOCE CHEGA A UMA SALA COM UM GRANDE PORTAO]
+    - O:
+      - [PORT, 'UM GRANDE PORTAO DE FERRO,COM UMA PEQUENA FECHADURA AZUL.']
+      - V:
+        - [ABRI]
+        - M:
+          - [SA10]
+        - S:
+          - [AZUL, VOCE CONSEGUIU ABRIR O PORTAO]
+    - O:
+      - [ATRA, UMA PASSAGEM ATRAS]
+      - V:
+        - [IR]
+        - M:
+          - [SAL5]
+  - L:
+    - [SAL9, VOCE CHEGA A UM BECO SEM SAIDA]
+    - O:
+      - ['PARE', UMA PAREDE COM ALGUNS TIJOLOS FALTANDO]
+      - V:
+        - [EXAM, 'AO OLHAR A PAREDE,VOCE ENCONTRA UM APERTADO TUNEL.VOCE QUER
+            ENTRAR NELE?']
+    - O:
+      - [ATRA, UMA PASSAGEM ATRAS]
+      - V:
+        - [IR]
+        - M:
+          - [SAL6]
+    - O:
+      - [TUNE]
+      - V:
+        - [ENTR]
+        - M:
+          - [SAL7]
+  - L:
+    - [SA10, 'VOCE VE UMA SAIDA']
+    - O:
+      - [SAID]
+      - V:
+        - [IR]
+        - F:
+          - [x, 'PARABENS!!!VOCE CONSEGUIU ENCONTRAR O TESOURO,SAO E SALVO!']
+  - L:
+    - [SAL1, ' VOCE ESTA NUM LABIRINTO,ONDE DIZEM HAVER UM GRANDE TESOURO.VOCE ESTA
+        DETERMINADO ACHA-LO']
+    - O:
+      - [DIRE, ' UMA ENTRADA A DIREITA']
+      - V:
+        - [IR]
+        - M:
+          - [SAL2]
+    - O:
+      - [ESQU, UMA ENTRADA A ESQUERDA]
+      - V:
+        - [IR]
+        - M:
+          - [SAL3]
+
