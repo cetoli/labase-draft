@@ -37,12 +37,13 @@
         - M:
           - [SAL4]
     - O:
-      - [MENSAGEM, 'UM PEDACO DE PAPEL']
+      - [PAPEL, 'UM PEDACO DE PAPEL']
       - V:
         - [EXAMINAR, NA MENSAGEM DIZ]
   - L:
-    - [SAL4, VOCE ENTRA NUMA SALA MUITO ESCURA. VOCE MAL CONSEGUE ENXERGAR ALGUMA
-        COISA.]
+    - [SAL4, VOCE ENTRA NUMA SALA MUITO ESCURA.] 
+    - D:
+      - [0,VOCE MAL CONSEGUE ENXERGAR ALGUMA COISA.]
     - O:
       - [ESQU, UMA PASSAGEM A ESQUERDA]
       - V:
@@ -165,8 +166,11 @@
         - F:
           - [x, 'PARABENS!!!VOCE CONSEGUIU ENCONTRAR O TESOURO,SAO E SALVO!']
   - L:
-    - [SAL1, ' VOCE ESTA NUM LABIRINTO,ONDE DIZEM HAVER UM GRANDE TESOURO.VOCE ESTA
-        DETERMINADO ACHA-LO']
+    - [SAL1, ' VOCE ESTA NUM LABIRINTO,']
+    - D:
+      - [0,'ONDE DIZEM HAVER UM GRANDE TESOURO.']
+    - D:
+      - [1,'VOCE ESTA DETERMINADO ACHA-LO']
     - O:
       - [DIRE, ' UMA ENTRADA A DIREITA']
       - V:
@@ -179,4 +183,10 @@
         - [IR]
         - M:
           - [SAL3]
+    - O:
+      - [ZZY, '']
+      - V:
+        - [XY, 'Voce diz as palavras magicas']
+        - M:
+          - [SA10]
 

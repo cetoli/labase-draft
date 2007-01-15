@@ -1,12 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: UTF8 -*-
 """
-Dedalus - a Platform for P2P distributed computing.
+Pyndorama: An adventure trip around the world.
+Pyndorama: Uma viagem de aventura ao redor do mundo
 ===================================================
 
 A text based adventure that can be programmed.
+Uma aventura baseada em texto que pode se programada.
 
-Copyright (c) 2002-2004
+Copyright (c) 2002-2007
 Carlo E.T. Oliveira et all 
 (see U{http://labase.nce.ufrj.br/info/equipe.html})
 
@@ -30,22 +32,40 @@ YOU_CAN_SEE='\nVoce pode ver:'
 class UselessAction(Exception):
   pass
 class Thing(object):
-    """Uma coisa qualquer."""
+    """Anything whatsoever - Uma coisa qualquer."""
     def __init__(self,value,*args):
         if len(value) <2 : value.append('')
-        self.key = value[0]
-        self.value = value[-1]
+        self.key = value[0] and str(value[0])[:4] or value[0]
+        self.value = self.wrap_long_text_to_fixed_width(value[-1])
         self.following = None
+        self.finalizer = lambda: None
     def setNext(self,next):
         self.following= next
     def additself(self,target):
-      """resposta do double dispatch de inicializacao"""
+      """Double-dispatch response during initialization
+      -- Resposta do double dispatch de inicializacao."""
       target.append(self)
     def perform(self,statement,place=None):
       return self.value + '\n'+ self.following.perform(statement,place)
+    def invoke_finalizer_hook_from_outer_application(self):
+      self.finalizer()
     def normalize(self,key):
-      """converte unicode, limitatamanho e muda para caixa alta"""
+      """converte unicode, limita tamanho e muda para caixa alta."""
       return util.latin1_to_ascii(key[:4].upper())
+    def wrap_long_text_to_fixed_width(self,description):
+      """Quebra texto longo em linhas menores"""
+      words = description.split(' ')
+      self.count = 0
+      def break_when_past_end(self, word):
+        wordcount = sum([letter.isupper() and 3 or 2 for letter in word])+2
+        self.count += wordcount
+        if self.count > 100:
+          self.count = wordcount
+          return "\n"+word
+        return word
+      wrap_text = ' '.join([break_when_past_end(self, word) for word in words])
+      #Strip blanks from the end of lines:
+      return '\n'.join([ line.strip() for line in wrap_text.split('\n')])
 
 class Things(Thing):
     """Coletivos."""
@@ -221,6 +241,7 @@ class Z(Things):
       global playadventure
       playadventure=False
       self.response= 'XXX --- ACABOU A SUA AVENTURA !!! --- XXX'
+      self.invoke_finalizer_hook_from_outer_application()
       return self.response
     def report(self):
       return inventario.show()
@@ -380,8 +401,8 @@ for t in range (ord('A'),ord('Z')):
     g[chr(t)] = type(chr(t), (Thing,), {})
   
 def load(aventura='ave.yaml'):
-  #return load_yaml(yaml.load(file('/home/carlo/Desktop/old/pyndorama/aventura/aventura/ave.yaml', 'r'))[0])
-  return load_yaml(yaml.load(file('/home/livia/labase-draft/pyndorama/aventura/aventura/'+aventura, 'r'))[0])
+  return load_yaml(yaml.load(file(aventura, 'r'))[0])
+  '''return load_yaml(yaml.load(file('/home/livia/labase-draft/pyndorama/aventura/aventura/'+aventura, 'r'))[0])'''
 def load_yaml(thing):
   global g
   thing_name = thing.keys()[0]
