@@ -1,0 +1,6 @@
+function OAS_RICH(position) {
+if (position == 'x31') {
+document.write ('<!-- OAS CAMPAIGN: OasDefault/BR_20061106_PRIMA_DELL_CPA -->\n');
+document.write ('<a href="http://deliverparc.ads.uigc.net/RealMedia/ads/click_lx.ads/homepages.br/usuarios/259904674/x31/OasDefault/BR_20061106_PRIMA_DELL_CPA/br_20061117_del-notebook_sky.html/63386132633831393435623337326330" target="_blank"><img src="http://latin3.directtrack.com/42/519/104" alt="" border="0"></a>');
+}
+}
