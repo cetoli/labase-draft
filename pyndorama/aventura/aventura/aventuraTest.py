@@ -136,6 +136,7 @@ class TestAventura(unittest.TestCase):
     """if perform action works"""
     loc = self.z.goto('apartamento')
     verbs = loc.find('chav').contents['PEGU']
+    #value = response_text_returned_from_action
     value =     verbs.perform(['PEGU','CHAV'],self.z)
     self.assertTrue(
       value.startswith('OK PEGUEI') 
@@ -166,7 +167,7 @@ class TestAventura(unittest.TestCase):
 
   def test_Wrap_long_text(self):
       text = "ESTE TEXTO E EXTREMAMENTE LONGO E DEVERIA SER QUEBRADO EM MAIS DE UMA LINHA "
-      wrap_text = Thing(['a', 'b']).wrap(text).split('\n')
+      wrap_text = Thing(['a', 'b']).wrap_long_text_to_fixed_width(text).split('\n')
       self.assertTrue(text[:33].startswith(wrap_text[0]), 
       'não quebrou como %s mas com %s'%(text[:33],wrap_text))        
 if __name__ == '__main__':
