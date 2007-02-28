@@ -111,6 +111,7 @@ class GtkGui:
       self.picture= TextImagePanel()
       self.action = gtk.Entry()
       self.button = gtk.Button("OK!")
+      self.button.connect("clicked", self.button_request) 
 
       window= BookWindow()
       window.paint("static/images/book.jpg")
