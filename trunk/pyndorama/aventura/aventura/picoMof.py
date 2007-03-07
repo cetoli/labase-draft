@@ -43,24 +43,30 @@ class MOFTypeElement(dict):
   def aggregate(self):
     if self.has_key(XMI_IDREF): 
       className=self.__class__.__name__
-      parent, granny=self, self
+      parent, granny, trigranny = self, self, self
       if self.has_key(MOF_PARENT): parent=self[MOF_PARENT]
       if parent.has_key(MOF_PARENT):
-        granny=parent[MOF_PARENT]
-        className=granny.__class__.__name__
+        trigranny=parent[MOF_PARENT]
+        className=trigranny.__class__.__name__
+      if trigranny.has_key(MOF_PARENT) and trigranny.mofType == 'AssociationEnd':
+        bigranny=trigranny[MOF_PARENT]
+        trigranny=bigranny[MOF_PARENT]
+        className=trigranny.__class__.__name__
       referree = self.references[self[XMI_IDREF]]    
       refClassName=referree.__class__.__name__
-      if not granny.has_key(refClassName): granny[refClassName]=[]
-      granny[refClassName].append(referree)
-      if not referree.has_key(className): referree[className]=[]
-      referree[className].append(granny)
+      if not trigranny.has_key(refClassName): trigranny[refClassName]=[]
+      trigranny[refClassName].append(referree)
+      if not referree.has_key(className): referree[className]=[]          
+      referree[className].append(trigranny)
+      
+      
     
 class MofDom:
   
-  MOFTypes = ['Model','Association','AssociationEnd'
-    ,'Class','ModelElement.stereotype','Stereotype', 'Association.connection'
+  MOFTypes = ['Model','Association','Association.connection','AssociationEnd'
     ,'AssociationEnd.multiplicity','Multiplicity','Multiplicity.range'
-    ,'MultiplicityRange','AssociationEnd.participant','Namespace.ownedElement'
+    ,'MultiplicityRange','AssociationEnd.participant'
+    ,'Class','ModelElement.stereotype','Stereotype', 'Namespace.ownedElement'
   ]
 
 
@@ -103,6 +109,21 @@ class MofDom:
     self.root = self.parse(self.load())
     return self
 
+  def buildTree(self):
+    mofDom = MofDom().make()
+    clz={}
+    clz.update(
+      (value['name'],value) for value in mofDom.root.values()
+      if value.mofType == 'Class' and value.has_key('name')
+    )
+    stereotypes=['world','location','object','verb','action']
+    def createChildren():
+      pass
+    [createChildren() for stereotype in stereotypes for world in clz.values()
+      if world ['MofStereotype'][0]['name'] == stereotype]
+    
+    
+
 if __name__ == '__main__':
   mofDom = MofDom().make()
   print [key['name'] for key in mofDom.root.values() 
@@ -116,5 +137,7 @@ if __name__ == '__main__':
   print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'object']
   print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'verb']
   print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'action']
+  print clz['Valley'].keys()
+  print clz['Valley']['MofAssociation'][0]['name']
 
 
