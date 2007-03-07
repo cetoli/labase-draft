@@ -43,20 +43,24 @@ class MOFTypeElement(dict):
   def aggregate(self):
     if self.has_key(XMI_IDREF): 
       className=self.__class__.__name__
-      if self.has_key(MOF_PARENT): className=self[MOF_PARENT].__class__.__name__
-      referree = self.references[self[XMI_IDREF]]
+      parent, granny=self, self
+      if self.has_key(MOF_PARENT): parent=self[MOF_PARENT]
+      if parent.has_key(MOF_PARENT):
+        granny=parent[MOF_PARENT]
+        className=granny.__class__.__name__
+      referree = self.references[self[XMI_IDREF]]    
       refClassName=referree.__class__.__name__
-      if not self.has_key(refClassName): self[refClassName]=[]
-      self[refClassName].append(referree)
+      if not granny.has_key(refClassName): granny[refClassName]=[]
+      granny[refClassName].append(referree)
       if not referree.has_key(className): referree[className]=[]
-      referree[className].append(self)
+      referree[className].append(granny)
     
 class MofDom:
   
-  MOFTypes = ['Model','Stereotype','Association','AssociationEnd'
-    ,'ModelElement.stereotype','Association.connection'
+  MOFTypes = ['Model','Association','AssociationEnd'
+    ,'Class','ModelElement.stereotype','Stereotype', 'Association.connection'
     ,'AssociationEnd.multiplicity','Multiplicity','Multiplicity.range'
-    ,'MultiplicityRange','AssociationEnd.participant','Namespace.ownedElement','Class'
+    ,'MultiplicityRange','AssociationEnd.participant','Namespace.ownedElement'
   ]
 
 
@@ -106,8 +110,11 @@ if __name__ == '__main__':
   clz={}
   clz.update((value['name'],value) for value in mofDom.root.values() 
   if value.mofType == 'Class' and value.has_key('name'))
-  print clz['Valley']
-  print clz['River']
-  print clz['Fly']
+  print clz ['Valley']['MofStereotype'][0]['name']
+  print [world for world in clz.values() if world ['MofStereotype'][0]['name'] == 'world'][0]['name']
+  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'location']
+  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'object']
+  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'verb']
+  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'action']
 
 

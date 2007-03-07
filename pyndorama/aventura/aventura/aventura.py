@@ -401,8 +401,13 @@ for t in range (ord('A'),ord('Z')):
     g[chr(t)] = type(chr(t), (Thing,), {})
   
 def load(aventura='ave.yaml'):
+
+  #return load_yaml(yaml.load(file('/home/carlo/Desktop/old/pyndorama/aventura/aventura/ave.yaml', 'r'))[0])
+
+
   return load_yaml(yaml.load(file(aventura, 'r'))[0])
   '''return load_yaml(yaml.load(file('/home/livia/labase-draft/pyndorama/aventura/aventura/'+aventura, 'r'))[0])'''
+
 def load_yaml(thing):
   global g
   thing_name = thing.keys()[0]
