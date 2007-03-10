@@ -34,32 +34,31 @@ class MOFTypeElement(dict):
   references = {}
   def register(self,model,parentkey):
     if self.has_key(XMI_ID): self.references[self[XMI_ID]]=self
-    if model.has_key(parentkey) :
-      className=self.__class__.__name__
+    if model.has_key(parentkey) : 
+      #self.crossassociate(model[parentkey],key=MOF_PARENT)
       parent = model[parentkey]
-      if not parent.has_key(className): parent[className]=[]
-      parent[className].append(self)
-      self[MOF_PARENT]=parent
+      self.associate(parent,MOF_PARENT)
+  def associate(self,other,key=None):
+      if key : self.update({key:other})
+      else: 
+        key = other.__class__.__name__
+        if not self.has_key(key):  self.update({
+          key:[other]
+        })
+        else: self[key].append(other)
+  def crossassociate(self,other,key=None):
+      self.associate(other,key);other.associate(self)
+  def navigate(self,arc,ends='MofClass'):
+      return [end for end in arc[ends] if end !=self][0]
   def aggregate(self):
+    daddy = lambda me:(me.has_key(MOF_PARENT) and me[MOF_PARENT]) or me
     if self.has_key(XMI_IDREF): 
-      className=self.__class__.__name__
-      parent, granny, trigranny = self, self, self
-      if self.has_key(MOF_PARENT): parent=self[MOF_PARENT]
-      if parent.has_key(MOF_PARENT):
-        trigranny=parent[MOF_PARENT]
-        className=trigranny.__class__.__name__
-      if trigranny.has_key(MOF_PARENT) and trigranny.mofType == 'AssociationEnd':
-        bigranny=trigranny[MOF_PARENT]
-        trigranny=bigranny[MOF_PARENT]
-        className=trigranny.__class__.__name__
+      parent = daddy(daddy(self))
+      if parent.mofType == 'AssociationEnd':
+        if  (parent['isNavigable']!='true'): return
+        parent = daddy(daddy(parent))
       referree = self.references[self[XMI_IDREF]]    
-      refClassName=referree.__class__.__name__
-      if not trigranny.has_key(refClassName): trigranny[refClassName]=[]
-      trigranny[refClassName].append(referree)
-      if not referree.has_key(className): referree[className]=[]          
-      referree[className].append(trigranny)
-      
-      
+      parent.crossassociate(referree)
     
 class MofDom:
   
@@ -138,6 +137,10 @@ if __name__ == '__main__':
   print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'verb']
   print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'action']
   print clz['Valley'].keys()
-  print clz['Valley']['MofAssociation'][0]['name']
+  valleyarcs = clz['Valley']['MofAssociation']
+  print valleyarcs[0]['MofClass'][0]['name']
+  print valleyarcs[0].keys()
+  ST='MofStereotype'
+  print [(clz['Valley'].navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in valleyarcs]
 
 
