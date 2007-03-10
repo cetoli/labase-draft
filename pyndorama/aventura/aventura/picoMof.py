@@ -26,13 +26,18 @@ from xml.dom.minidom import Node
 __author__  = "Carlo E. T. Oliveira (cetoli@yahoo.com.br) $Author$"
 __version__ = "1.0 $Revision$"[10:-1]
 __date__    = "2007/03/04 $Date$"
+class MOFTypeElement(dict):pass
 
 XMI_ID= 'xmi.id'
 XMI_IDREF= 'xmi.idref'
 MOF_PARENT = 'mof.parent'
+MOF_NONE = MOFTypeElement()
+MOF_NONE['name']= '<<MOFNONE>>'
+NONES= [MOF_NONE]
 class MOFTypeElement(dict):
   references = {}
   def register(self,model,parentkey):
+    self.contents=[]
     if self.has_key(XMI_ID): self.references[self[XMI_ID]]=self
     if model.has_key(parentkey) : 
       #self.crossassociate(model[parentkey],key=MOF_PARENT)
@@ -42,20 +47,23 @@ class MOFTypeElement(dict):
       if key : self.update({key:other})
       else: 
         key = other.__class__.__name__
-        if not self.has_key(key):  self.update({
-          key:[other]
-        })
+        if not self.has_key(key):  self.update({key:[other]})
         else: self[key].append(other)
   def crossassociate(self,other,key=None):
       self.associate(other,key);other.associate(self)
   def navigate(self,arc,ends='MofClass'):
-      return [end for end in arc[ends] if end !=self][0]
+    associationEnd=[end for end in arc[ends] if end !=self]
+    return associationEnd and associationEnd[0] or None
+  def composite(self,arcs='MofAssociation'
+    ,matches= lambda link,self:self.navigate(arc)):
+      [self.contents.append(matches(arc,self)) for arc in self[arcs]
+        if  self.navigate(arc) and matches(arc,self) ]
   def aggregate(self):
     daddy = lambda me:(me.has_key(MOF_PARENT) and me[MOF_PARENT]) or me
     if self.has_key(XMI_IDREF): 
       parent = daddy(daddy(self))
       if parent.mofType == 'AssociationEnd':
-        if  (parent['isNavigable']!='true'): return
+        #if  (parent['isNavigable']!='true'): return
         parent = daddy(daddy(parent))
       referree = self.references[self[XMI_IDREF]]    
       parent.crossassociate(referree)
@@ -108,23 +116,34 @@ class MofDom:
     self.root = self.parse(self.load())
     return self
 
-  def buildTree(self):
-    mofDom = MofDom().make()
+  def buildTree(self,mofDom):
+    #mofDom = MofDom().make()
     clz={}
     clz.update(
       (value['name'],value) for value in mofDom.root.values()
       if value.mofType == 'Class' and value.has_key('name')
     )
-    stereotypes=['world','location','object','verb','action']
-    def createChildren():
-      pass
-    [createChildren() for stereotype in stereotypes for world in clz.values()
-      if world ['MofStereotype'][0]['name'] == stereotype]
+    stereotypes=['world','location','object','action']
+    matchrole = lambda arcs,role,self:arcs.has_key('MofStereotype') and role in [
+      arole['name'] for arole in arcs['MofStereotype'] 
+    ] and self.navigate(arcs) #or not arcs.has_key('MofStereotype')
+    matchers={
+      'world':lambda arc,self:self.navigate(arc)
+      ,'location':lambda node,self=self:matchrole(node,role='hold',self=self)
+      ,'object':lambda node,self=self:matchrole(node,role='imply',self=self)
+      ,'action':lambda node,self=self:matchrole(node,role='subject',self=self)
+    }
+    def createChildren(holder,role):
+      holder.composite(matches=matchers[role])
+    [createChildren(container,stereotype) for stereotype in stereotypes for container in clz.values()
+      if container ['MofStereotype'][0]['name'] == stereotype]
+    return [root for root in clz.values() if 'world' == root['MofStereotype'][0]['name']][0]
     
     
 
 if __name__ == '__main__':
-  mofDom = MofDom().make()
+  domMof = MofDom()
+  mofDom = domMof.make()
   print [key['name'] for key in mofDom.root.values() 
   if key.mofType == 'Class' and key.has_key('name')]
   clz={}
@@ -141,6 +160,8 @@ if __name__ == '__main__':
   print valleyarcs[0]['MofClass'][0]['name']
   print valleyarcs[0].keys()
   ST='MofStereotype'
-  print [(clz['Valley'].navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in valleyarcs]
-
-
+  #print [(node['name'],[(clz['Valley'].navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in node['MofAssociation']]) for node in clz.values()]
+  print [node['name']+"==>"+str([(node.navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in node['MofAssociation'] if node.navigate(arc)])+ '\n\n' for node in clz.values()]
+  root = domMof.buildTree(mofDom)
+  print '----------------------------'
+  print [(c['name'],[cc['name'] for cc in c.contents]) for c in clz.values()]
