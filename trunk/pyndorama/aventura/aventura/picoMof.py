@@ -69,7 +69,8 @@ class MOFTypeElement(dict):
       parent.crossassociate(referree)
       
 class MofVerbAction(dict):
-  actionmatchers = {
+  mof = {}
+  actionMatchers = {
       'move':{'subject':'actor','target':'location'}
       , 'take':{'subject':'object','target':'location'}
       , 'pick':{'subject':'object','target':'actor'}
@@ -79,25 +80,47 @@ class MofVerbAction(dict):
       , 'submission':{'assertive':'object'}
   }
   def __init__(self,action=None,actionPattern=[],name='<<NONO>>'):
-    self.name=name
+    self['name']=name
     self.contents=self.buildActionTree(action,actionPattern)
     self.match=self.matchaction
+    self.clz={}
+    #self.mof={}
   def build(self,action,actionPattern):
     self.match=self.matchaction
-    name = actionPattern.pop()+action['name']
-    return MofVerbAction(self.action,self.actionKeys,name)
+    name = actionPattern.popitem()[0]+action['name']
+    action = MofVerbAction(self.action,self.actionKeys,name) 
+    return action
   def buildActionTree(self,action,actionPattern):
     if not actionPattern: return []
     name = actionPattern.pop()+action['name']
-    return [MofVerbAction(self.action,self.actionKeys)]
-  def actionMatched(self,roletree):
-    self.actionKeys=[
-      matchkey for matcher in self.actionmatchers if [
-        match for match in self.actionmatchers[matchkey] if not False in [
-          roletree[part] == value for part, value in match.items() 
-        ]
-      ]
+    action = MofVerbAction(action,actionPattern)
+    self.mof[action['name']]=action
+    #self.clz[action['name']]=action
+    return [action]
+    
+  def matchEach(self,matcher,roletree):
+    '''
+    >>> roletree = {'assertive':'object'}
+    >>> MofVerbAction().matchEach(roletree,roletree)
+    True
+    '''
+    return  not False in [
+        roletree.has_key(part) and roletree[part] == value for part, value in matcher.items() 
     ]
+    pass
+
+  def actionMatched(self,roletree):
+    '''
+    >>> roletree = {'assertive':'object'}
+    >>> MofVerbAction().actionMatched(roletree)
+    ['submission']
+    '''
+      
+    self.actionKeys=[
+      matchkey for matchkey, matcher in self.actionMatchers.iteritems()#]
+      if self.matchEach(matcher,roletree)
+    ]
+    '''  '''
     if self.actionKeys:
       self.match=self.build
     return self.actionKeys
@@ -107,6 +130,42 @@ class MofVerbAction(dict):
       (arcRole['name'],nodeRole['name']) for arcRole in arcs['MofStereotype'] 
       for nodeRole in node.navigate(arcs)['MofStereotype']
     ]))
+    
+  def buildTree(self,mofDom):
+    '''
+    >>> verb = MofVerbAction()
+    >>> root = verb.buildTree(MofDom().make())
+    >>> tuples = lambda cont: [cc['name'] for cc in cont if cc.has_key('name')]
+    >>> clazzes = dict([(c['name'],tuples(c.contents)) for c in verb.clz.values() if c.has_key('name')])
+    >>> [ a in [u'Valley', u'Pebble'] for a in clazzes['River']]
+    [True, True]
+    >>> clazzes
+    []
+    '''
+    self.mof = mofDom.root
+    self.clz.update(
+      (value['name'],value) for value in mofDom.root.values()
+      if value.mofType == 'Class' and value.has_key('name')
+    )
+    stereotypes=['world','location','object','action']
+    matchrole = lambda arcs,role,self:arcs.has_key('MofStereotype') and role in [
+      arole['name'] for arole in arcs['MofStereotype'] 
+    ] and self.navigate(arcs)
+    matchFactory=MofVerbAction()
+    
+    matchers={
+      'world':lambda arc,self:self.navigate(arc)
+      ,'location':lambda node,self=self:matchrole(node,role='hold',self=self)
+      ,'object':lambda node,self=self:matchrole(node,role='imply',self=self)
+      ,'action':lambda node,self=self:matchrole(node,role='subject',self=self)
+      ,'action':lambda arc,node,fact=matchFactory:fact.match(arc,node)
+    }
+    def createChildren(holder,role):
+      holder.composite(matches=matchers[role])
+    [createChildren(container,stereotype) for stereotype in stereotypes for container in self.clz.values()
+      if container ['MofStereotype'][0]['name'] == stereotype]
+    return [root for root in self.clz.values() if 'world' == root['MofStereotype'][0]['name']][0]
+    
     
 class MofDom:
   
@@ -156,55 +215,36 @@ class MofDom:
     self.root = self.parse(self.load())
     return self
 
-  def buildTree(self,mofDom):
-    #mofDom = MofDom().make()
-    clz={}
-    clz.update(
-      (value['name'],value) for value in mofDom.root.values()
-      if value.mofType == 'Class' and value.has_key('name')
-    )
-    stereotypes=['world','location','object','action']
-    matchrole = lambda arcs,role,self:arcs.has_key('MofStereotype') and role in [
-      arole['name'] for arole in arcs['MofStereotype'] 
-    ] and self.navigate(arcs)
-    matchFactory=MofVerbAction()
-    
-    matchers={
-      'world':lambda arc,self:self.navigate(arc)
-      ,'location':lambda node,self=self:matchrole(node,role='hold',self=self)
-      ,'object':lambda node,self=self:matchrole(node,role='imply',self=self)
-      ,'action':lambda node,self=self:matchrole(node,role='subject',self=self)
-      ,'verb':lambda node,arc,fact=matchFactory:fact.match(node,arc)
-    }
-    def createChildren(holder,role):
-      holder.composite(matches=matchers[role])
-    [createChildren(container,stereotype) for stereotype in stereotypes for container in clz.values()
-      if container ['MofStereotype'][0]['name'] == stereotype]
-    return [root for root in clz.values() if 'world' == root['MofStereotype'][0]['name']][0]
-    
-    
+def _test():
+    import doctest
+    doctest.testmod()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+  _test()
+
   domMof = MofDom()
   mofDom = domMof.make()
-  print [key['name'] for key in mofDom.root.values() 
-  if key.mofType == 'Class' and key.has_key('name')]
-  clz={}
-  clz.update((value['name'],value) for value in mofDom.root.values() 
+ 
+  #print [key['name'] for key in mofDom.root.values() 
+  #if key.mofType == 'Class' and key.has_key('name')]
+  claz={}
+  claz.update((value['name'],value) for value in mofDom.root.values() 
   if value.mofType == 'Class' and value.has_key('name'))
-  print clz ['Valley']['MofStereotype'][0]['name']
-  print [world for world in clz.values() if world ['MofStereotype'][0]['name'] == 'world'][0]['name']
-  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'location']
-  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'object']
-  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'verb']
-  print [world['name'] for world in clz.values() if world ['MofStereotype'][0]['name'] == 'action']
-  print clz['Valley'].keys()
-  valleyarcs = clz['Valley']['MofAssociation']
+  '''
+  print claz ['Valley']['MofStereotype'][0]['name']
+  print [world for world in claz.values() if world ['MofStereotype'][0]['name'] == 'world'][0]['name']
+  print [world['name'] for world in claz.values() if world ['MofStereotype'][0]['name'] == 'location']
+  print [world['name'] for world in claz.values() if world ['MofStereotype'][0]['name'] == 'object']
+  print [world['name'] for world in claz.values() if world ['MofStereotype'][0]['name'] == 'verb']
+  print [world['name'] for world in claz.values() if world ['MofStereotype'][0]['name'] == 'action']
+  print claz['Valley'].keys()
+  valleyarcs = claz['Valley']['MofAssociation']
   print valleyarcs[0]['MofClass'][0]['name']
   print valleyarcs[0].keys()
   ST='MofStereotype'
   #print [(node['name'],[(clz['Valley'].navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in node['MofAssociation']]) for node in clz.values()]
-  print [node['name']+"==>"+str([(node.navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in node['MofAssociation'] if node.navigate(arc)])+ '\n\n' for node in clz.values()]
-  root = domMof.buildTree(mofDom)
-  print '----------------------------'
-  print [(c['name'],[cc['name'] for cc in c.contents]) for c in clz.values()]
+  print [node['name']+"==>"+str([(node.navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in node['MofAssociation'] if node.navigate(arc)])+ '\n\n' for node in claz.values()]
+  '''
+  root = MofVerbAction().buildTree(mofDom)
+  #print dict([(c['name'],[cc['name'] for cc in c.contents]) for c in claz.values()])
+
