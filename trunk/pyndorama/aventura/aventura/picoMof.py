@@ -67,6 +67,46 @@ class MOFTypeElement(dict):
         parent = daddy(daddy(parent))
       referree = self.references[self[XMI_IDREF]]    
       parent.crossassociate(referree)
+      
+class MofVerbAction(dict):
+  actionmatchers = {
+      'move':{'subject':'actor','target':'location'}
+      , 'take':{'subject':'object','target':'location'}
+      , 'pick':{'subject':'object','target':'actor'}
+      , 'activating':{'certificate':'object'}
+      , 'blocking':{'uncertificate':'object'}
+      , 'refutal':{'unassertive':'object'}
+      , 'submission':{'assertive':'object'}
+  }
+  def __init__(self,action=None,actionPattern=[],name='<<NONO>>'):
+    self.name=name
+    self.contents=self.buildActionTree(action,actionPattern)
+    self.match=self.matchaction
+  def build(self,action,actionPattern):
+    self.match=self.matchaction
+    name = actionPattern.pop()+action['name']
+    return MofVerbAction(self.action,self.actionKeys,name)
+  def buildActionTree(self,action,actionPattern):
+    if not actionPattern: return []
+    name = actionPattern.pop()+action['name']
+    return [MofVerbAction(self.action,self.actionKeys)]
+  def actionMatched(self,roletree):
+    self.actionKeys=[
+      matchkey for matcher in self.actionmatchers if [
+        match for match in self.actionmatchers[matchkey] if not False in [
+          roletree[part] == value for part, value in match.items() 
+        ]
+      ]
+    ]
+    if self.actionKeys:
+      self.match=self.build
+    return self.actionKeys
+  def matchaction(self,arcs,node):
+    self.action=node
+    return arcs.has_key('MofStereotype') and self.actionMatched(dict([
+      (arcRole['name'],nodeRole['name']) for arcRole in arcs['MofStereotype'] 
+      for nodeRole in node.navigate(arcs)['MofStereotype']
+    ]))
     
 class MofDom:
   
@@ -126,12 +166,15 @@ class MofDom:
     stereotypes=['world','location','object','action']
     matchrole = lambda arcs,role,self:arcs.has_key('MofStereotype') and role in [
       arole['name'] for arole in arcs['MofStereotype'] 
-    ] and self.navigate(arcs) #or not arcs.has_key('MofStereotype')
+    ] and self.navigate(arcs)
+    matchFactory=MofVerbAction()
+    
     matchers={
       'world':lambda arc,self:self.navigate(arc)
       ,'location':lambda node,self=self:matchrole(node,role='hold',self=self)
       ,'object':lambda node,self=self:matchrole(node,role='imply',self=self)
       ,'action':lambda node,self=self:matchrole(node,role='subject',self=self)
+      ,'verb':lambda node,arc,fact=matchFactory:fact.match(node,arc)
     }
     def createChildren(holder,role):
       holder.composite(matches=matchers[role])
