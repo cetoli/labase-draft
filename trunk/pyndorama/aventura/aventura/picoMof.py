@@ -56,8 +56,10 @@ class MOFTypeElement(dict):
     return associationEnd and associationEnd[0] or None
   def composite(self,arcs='MofAssociation'
     ,matches= lambda link,self:self.navigate(arc)):
-      [self.contents.append(matches(arc,self)) for arc in self[arcs]
-        if  self.navigate(arc) and matches(arc,self) ]
+      for arc in self[arcs]:
+        match=matches(arc,self)
+        if  self.navigate(arc) and matches(arc,self):
+          self.contents.append(match) 
   def aggregate(self):
     daddy = lambda me:(me.has_key(MOF_PARENT) and me[MOF_PARENT]) or me
     if self.has_key(XMI_IDREF): 
@@ -82,26 +84,26 @@ class MofVerbAction(dict):
   def __init__(self,action=None,actionPattern=[],name='<<NONO>>'):
     self['name']=name
     self.contents=self.buildActionTree(action,actionPattern)
-    self.match=self.matchaction
     self.clz={}
-    #self.mof={}
-  def build(self,action,actionPattern):
-    self.match=self.matchaction
-    name = actionPattern.popitem()[0]+action['name']
-    action = MofVerbAction(self.action,self.actionKeys,name) 
-    return action
+    #self.mof = MofDom.mofmodel
   def buildActionTree(self,action,actionPattern):
+    '''
+    >>> roletree = ['submission', 'take']
+    >>> mof=MofVerbAction();node={'name':'ACTION'}
+    >>> mof.buildActionTree(node,roletree)
+    {'name': 'takeACTION'}
+    '''
     if not actionPattern: return []
     name = actionPattern.pop()+action['name']
-    action = MofVerbAction(action,actionPattern)
-    self.mof[action['name']]=action
-    #self.clz[action['name']]=action
-    return [action]
+    action = MofVerbAction(action,actionPattern,name)
+    self.mof[name]=action
+    return action
     
   def matchEach(self,matcher,roletree):
     '''
-    >>> roletree = {'assertive':'object'}
-    >>> MofVerbAction().matchEach(roletree,roletree)
+    >>> roletree = {'assertive':'object','hold':'object'}
+    >>> matcher  = {'assertive':'object'}
+    >>> MofVerbAction().matchEach(matcher,roletree)
     True
     '''
     return  not False in [
@@ -109,24 +111,27 @@ class MofVerbAction(dict):
     ]
     pass
 
-  def actionMatched(self,roletree):
+  def actionMatched(self,node,roletree):
     '''
-    >>> roletree = {'assertive':'object'}
-    >>> MofVerbAction().actionMatched(roletree)
-    ['submission']
+    >>> roletree = {'assertive':'object','hold':'object'}
+    >>> mof=MofVerbAction();node={'name':'ACTION'}
+    >>> mof.actionMatched(node,roletree)
+    {'name': 'submissionACTION'}
+    >>> roletree = {'assertive':'object','hold':'object','subject':'object','target':'location'}
+    >>> mof.actionMatched(node,roletree)
+    {'name': 'takeACTION'}
     '''
-      
     self.actionKeys=[
       matchkey for matchkey, matcher in self.actionMatchers.iteritems()#]
       if self.matchEach(matcher,roletree)
     ]
-    '''  '''
     if self.actionKeys:
-      self.match=self.build
+      return self.buildActionTree(node,self.actionKeys)
     return self.actionKeys
-  def matchaction(self,arcs,node):
+    
+  def match(self,arcs,node):
     self.action=node
-    return arcs.has_key('MofStereotype') and self.actionMatched(dict([
+    return arcs.has_key('MofStereotype') and self.actionMatched(node,dict([
       (arcRole['name'],nodeRole['name']) for arcRole in arcs['MofStereotype'] 
       for nodeRole in node.navigate(arcs)['MofStereotype']
     ]))
@@ -157,7 +162,6 @@ class MofVerbAction(dict):
       'world':lambda arc,self:self.navigate(arc)
       ,'location':lambda node,self=self:matchrole(node,role='hold',self=self)
       ,'object':lambda node,self=self:matchrole(node,role='imply',self=self)
-      ,'action':lambda node,self=self:matchrole(node,role='subject',self=self)
       ,'action':lambda arc,node,fact=matchFactory:fact.match(arc,node)
     }
     def createChildren(holder,role):
@@ -174,6 +178,8 @@ class MofDom:
     ,'MultiplicityRange','AssociationEnd.participant'
     ,'Class','ModelElement.stereotype','Stereotype', 'Namespace.ownedElement'
   ]
+  
+  mofmodel = {}
 
 
   def __init__(self):
@@ -199,7 +205,7 @@ class MofDom:
     return xml.dom.minidom.parse(aventura)
   
   def parse(self, dom):
-    model = {}
+    model = self.mofmodel
     nameSpace = 'org.omg.xmi.namespace.UML'
     [ model.update({element:self.makeMofTypeInstance(element)}) 
       or model[element].register(model,element.parentNode)
@@ -244,7 +250,7 @@ if __name__ == "__main__":
   ST='MofStereotype'
   #print [(node['name'],[(clz['Valley'].navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in node['MofAssociation']]) for node in clz.values()]
   print [node['name']+"==>"+str([(node.navigate(arc)['name'],arc.has_key(ST) and arc[ST][0]['name'] or 'nono') for arc in node['MofAssociation'] if node.navigate(arc)])+ '\n\n' for node in claz.values()]
-  '''
   root = MofVerbAction().buildTree(mofDom)
   #print dict([(c['name'],[cc['name'] for cc in c.contents]) for c in claz.values()])
+  '''
 
