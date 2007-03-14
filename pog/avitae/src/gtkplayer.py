@@ -20,11 +20,10 @@ from random import randint
 from time import sleep
 import gtk
 from gtk.gdk import GC, Color
-from mof import Diagram
 from cage import Player
 
 
-class GtkPlayer(Player):
+class GtkGui:
   """
   GUI usando Gtk.
   """
@@ -45,7 +44,7 @@ class GtkPlayer(Player):
       self.pixmap = None
       self.area.show()
       window.show()
-      gtk.main()
+      #gtk.main()
 
   def configure_event(self,widget, event):
     global pixmap
@@ -59,10 +58,15 @@ class GtkPlayer(Player):
     red = gtk.gdk.color_parse("red")
     red_gc = self.pixmap.new_gc()    
     red_gc.set_foreground(self.pixmap.get_colormap().alloc_color(65535,0,0))
+    green = gtk.gdk.color_parse("green")
+    green_gc = self.pixmap.new_gc()    
+    green_gc.set_foreground(self.pixmap.get_colormap().alloc_color(0,65535,0))
     
     self.pal={" ":self.area.get_style().white_gc,
       "*":self.area.get_style().black_gc,
-      "$":red_gc}
+      "$":red_gc,
+      "#":green_gc
+      }
     return True
     
   def area_expose_cb(self, widget, event):
@@ -77,57 +81,51 @@ class GtkPlayer(Player):
     self.area.queue_draw()
   def draw(self,where,target):
     gc = self.pal[target]
-    self.pixmap.draw_rectangle(gc, True, where[0]*10-30, where[1]*10-5 , 60, 10)
-  def linker(self,link):
-    self.link(link[0],link[1])
-  def link(self,froms,where):
-    gc = self.pal['*']
-    self.pixmap.draw_line(gc,
-      froms[0]*10, froms[1]*10 ,
-      where[0]*10, where[1]*10 )
-  
-class GtkImagePlayer:
-    def __init__(self, width=600, height=600):
-        assert Image
+    self.pixmap.draw_rectangle(gc, True, where[0]*10-5, where[1]*10-5 , 10, 10)
+
+class GtkPlayer(Player):
+    def __init__(self, width=60, height=60):
         Player.__init__(self)
         self.width = width
         self.height = height
-        self.image = Image.new('1', (width, height), 0)
-        self.size = (width,)
+        self.size = self.width, self.height
         self.row = 0
         self.inited = 0
 
     def draw(self,gc=None):
-      [gc.draw(clazz.pos(),'*') for clazz in self.clazzes]
-      #[gc.linker(link.linker()) for link in self.links] # em linha reta
-      [Wire(wire=link.linker()).draw(gc) for link in self.links] #em angulos retos
+      map = self.automaton.map
+      for x in range(map.width):
+        for y in range(map.height):
+            state = map.get((x, y))
+            if state: gc.draw((y,x),'*')
+      for agent in self.automaton.agents:
+        # Show the agent in reverse video.
+        #icon = self.stateIcon(map.get(agent.location))
+        ax, ay = agent.location
+        gc.draw((ay,ax),'$')
+        if hasattr(agent, 'direction'):
+          markLocation = agent.direction.advance(agent.location)
+          if map.isNormalized(markLocation):
+              mx, my = markLocation
+              #self.stdscr.addch(my, mx, \
+              #self.directionIcon(agent.direction.offset()),curses.A_BOLD)
+              gc.draw((my,mx),'#')
       gc.do_draw()
-      sleep(0.1)
-    def display(self):
-        map = self.automaton.map
-        for x in range(map.length):
-            self.image.putpixel((x, self.row), 255*map.get((x,)))
-        self.row += 1
+      #sleep(0.1)
+      self.automaton.update()
+      self.automaton.between()
 
     def main(self, automaton):
-        Player.main(self, automaton)
-        assert self.automaton is not None
-        assert self.automaton.map.dimension == 1 ###
-        while self.row < self.height and self.automaton.running():
-            self.display()
-            self.automaton.update()
-            self.automaton.between()
-        self.finish()
-
-    def finish(self):
-        self.image.show()
-        
-class Main:      
-  def __init__(self):
-      GtkGui(GtkImagePlayer())
-
-
-
-if __name__ == '__main__':
-  Main()
+      Player.main(self, automaton)
+      assert self.automaton is not None
+      assert self.automaton.map.dimension == 2 ###
+      '''
+      while self.row < self.height and self.automaton.running():
+          self.display()
+          self.automaton.update()
+          self.automaton.between()
+      self.finish()
+      '''
+      GtkGui(self)
+      gtk.main()
 

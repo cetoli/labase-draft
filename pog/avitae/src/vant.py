@@ -13,6 +13,8 @@ import curses
 
 import cage
 
+from gtkplayer import GtkPlayer
+
 
 class Vant(cage.Agent):
     
@@ -58,26 +60,26 @@ class Automaton(cage.AgentAutomaton):
         cage.AgentAutomaton.__init__(self, Map(size))
 
 
-def main(stdscr):
+def main(stdscr=None):
     import sys
     if len(sys.argv) < 2:
         vants = 1
     else:
         vants = int(sys.argv[1])
-    try:
-        player = cage.CursesPlayer(stdscr)
-        size = player.size
-        automaton = Automaton(size)
-        map = automaton.map
-        for i in range(vants):
-            if i == 0:
-                loc = map.center()
-            else:
-                loc = map.random()
-            automaton.add(Vant(automaton, loc))
-        player.main(automaton)
-    finally:
-        player.done()
+    #try:
+    player = GtkPlayer()
+    size = player.size
+    automaton = Automaton(size)
+    map = automaton.map
+    for i in range(vants):
+        if i == 0:
+            loc = map.center()
+        else:
+            loc = map.random()
+        automaton.add(Vant(automaton, loc))
+    player.main(automaton)
+#finally:
+    player.done()
 
 if __name__ == '__main__':
-    curses.wrapper(main)
+    main()
