@@ -144,6 +144,9 @@ class MofVerbAction(dict):
     >>> clazzes = dict([(c['name'],tuples(c.contents)) for c in verb.clz.values() if c.has_key('name')])
     >>> [ a in [u'Valley', u'Pebble'] for a in clazzes['River']]
     [True, True]
+    >>> #clazzes
+    >>> clazzes = dict([(c['name'],c['MofStereotype'][0]['name']) for c in verb.clz.values() if c.has_key('name')and c.has_key('MofStereotype')])
+    >>> clazzes = dict([(c['name'],tuples(c.contents)) for c in verb.clz.values() if c.has_key('name')and c.has_key('MofStereotype')and 'location' in c['MofStereotype'][0]['name'] ])
     >>> clazzes
     []
     '''
