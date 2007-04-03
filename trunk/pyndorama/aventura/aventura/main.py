@@ -23,7 +23,7 @@ import gtk
 import aventura
 
 
-class Pyndorama:
+class PyndoramaAdventure:
   """Pyndorama Adventure - Aventura Pyndorama"""
   def __init__(self,adventure="ave.yaml"):
     "Load adventure from disk - Carrega a Aventura do disco"
@@ -102,7 +102,7 @@ class GtkGui:
   def reset(self):
     self.request = self.request_adventure
     self.text.write('Benvindo ao Pindorama!\nEscreva na caixa a aventura\nque você quer jogar:\n  - ave\n  - labirinto')
-    self.picture.stamp("static/images/pindorama.png")
+    self.picture.stamp("static/images/pindorama.svg")
 
   def __init__(self, client):
       self.pixmap = None
@@ -114,7 +114,7 @@ class GtkGui:
       self.button.connect("clicked", self.button_request) 
 
       window= BookWindow()
-      window.paint("static/images/book.jpg")
+      window.paint("static/images/book.svg")
 
       vbox = gtk.HBox(1, 2)
       left = gtk.Fixed()
@@ -133,14 +133,14 @@ class GtkGui:
       
       self.picture.config()
       self.text.config()
-      self.text.paint("static/images/paper.jpg")
+      self.text.paint("static/images/paper.svg")
       self.reset()
       gtk.main()
       
   def button_request(self, *args):
     self.request()
   def request_adventure(self, *args):
-    self.client = Pyndorama(self.action.get_text()+".yaml")
+    self.client = PyndoramaAdventure(self.action.get_text()+".yaml")
     self.request = self.perform_command
     self.client.action("", self)
 
@@ -149,7 +149,7 @@ class GtkGui:
 
 class Main:      
   def __init__(self):
-      self.pindorama=Pyndorama()
+      self.pindorama=PyndoramaAdventure()
       GtkGui(self.pindorama)
 
 if __name__ == '__main__':
