@@ -16,8 +16,8 @@ This software is licensed as described in the file LICENSE.txt,
 which you should have received as part of this distribution.
 """
 __author__  = "Carlo E. T. Oliveira (cetoli@yahoo.com.br) $Author$"
-__version__ = "1.0 $Revision:$"[10:-1]
-__date__    = "2007/4/16 $Date:$"
+__version__ = "1.0 $Revision$"[10:-1]
+__date__    = "2007/4/16 $Date$"
 
 from graphic_world import World, Actor
 
@@ -60,6 +60,12 @@ class Vygotsky_World (World):
     >>> my_little_world.draw_canvas(Drawing_Reporter())
     hi
     ('me', 1, 0)
+    '''
+    pass
+    
+  def populate(self):
+    '''
+    Create a collection of Coloured shapes
     '''
     pass
     
