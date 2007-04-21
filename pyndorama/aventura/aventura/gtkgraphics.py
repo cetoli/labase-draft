@@ -76,7 +76,16 @@ class GtkGui:
     self.area.queue_draw()
   def draw_feature(self,where):
     gc = self.pal['$']
-    self.pixmap.draw_rectangle(gc, True, where[1], where[2] , 10, 10)
+    face,x,y= where
+    self.pixmap.draw_rectangle(gc, True, x, y , 10, 10)
+    image = gtk.gdk.pixbuf_new_from_file('images/'+face);
+    width, height =(50, 50)
+    scaled_buf = image.scale_simple(width, height, gtk.gdk.INTERP_BILINEAR)
+    del image
+    background,mask= scaled_buf.render_pixmap_and_mask( 255 );
+    self.area.draw_drawable(gc, self.pixmap, 0, 0, x, y, 50, 50)
+    del background, mask
+
   
 class Element(object):
     """ This class stand for a element
