@@ -16,8 +16,8 @@ This software is licensed as described in the file LICENSE.txt,
 which you should have received as part of this distribution.
 """
 __author__  = "Carlo E. T. Oliveira (cetoli@yahoo.com.br) $Author$"
-__version__ = "1.0 $Revision:$"[10:-1]
-__date__    = "2007/4/16 $Date:$"
+__version__ = "1.0 $Revision$"[10:-1]
+__date__    = "2007/4/16 $Date$"
 
 IDEAL_GRID,IDEAL_CELL = 12,50
 IS_ZERO = 0
@@ -49,13 +49,13 @@ class World:
     '''
     class No_Cell_Here:
       '''Use it where there is no cell'''
+      def enter_world(self, given_world): pass
       def draw_canvas(self,x,*args): pass
       def __repr__(self): return 'nun'
     self.NoCell = No_Cell_Here()
     self.grid_size,self.cell_size = set_grid, set_cell
     self.cell_grid = []
-    for i in range(self.grid_size):
-      self.cell_grid.append([self.NoCell]*self.grid_size)
+    self.remove_actors()
 
 
   def add_actor(self, given_actor, position_x= IS_ZERO, position_y= IS_ZERO):
@@ -68,6 +68,20 @@ class World:
     '''
     self.cell_grid[position_x][position_y] = given_actor
     given_actor.enter_world(self)
+  def remove_actors(self):
+    '''
+    Remove all actors from the world grid
+    >>> my_little_world = World(2)
+    >>> my_great_actor = Cell_Painter()
+    >>> my_little_world.add_actor(my_great_actor)
+    >>> my_little_world.remove_actors()
+    >>> my_little_world.cell_grid[0][0]
+    nun
+    '''
+    [actor.enter_world(None) for row in self.cell_grid for actor in row ]
+    self.cell_grid = []
+    for i in range(self.grid_size):
+      self.cell_grid.append([self.NoCell]*self.grid_size)
   def remove_actor(self, given_actor):
     '''
     Remove an actor from the world grid
@@ -96,7 +110,7 @@ class World:
     ('me', 1, 0)
     '''
     self.draw_world(given_canvas)
-    [cell_to_paint.draw_canvas(given_canvas,x,y) 
+    [cell_to_paint.draw_canvas(given_canvas, x*self.cell_size, y*self.cell_size) 
        for x,row_to_paint in enumerate(self.cell_grid) 
        for y,cell_to_paint in enumerate(row_to_paint)]
 
