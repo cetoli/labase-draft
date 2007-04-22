@@ -25,6 +25,7 @@ STOCK_ACTOR = "actor.png"
 
 class Cell_Painter:
   '''tester class to paint a cell'''
+  def configure_actor(self, given_canvas, x, y): pass
   def enter_world(self, given_world): pass
   def draw_canvas(self, given_canvas,pos_x,pos_y):
     given_canvas.draw_feature(('me',pos_x,pos_y))
@@ -49,6 +50,7 @@ class World:
     '''
     class No_Cell_Here:
       '''Use it where there is no cell'''
+      def configure_actor(self, given_canvas, x, y): pass
       def enter_world(self, given_world): pass
       def draw_canvas(self,x,*args): pass
       def __repr__(self): return 'nun'
@@ -58,6 +60,22 @@ class World:
     self.remove_actors()
 
 
+  def configure_world(self, given_canvas):
+    '''
+    Configure each actor into the world grid
+    >>> my_little_world = World(2)
+    >>> ge= my_graphic_element = Drawing_Reporter()
+    >>> my_graphic_element.create_element= lambda n,self=ge:self.draw_feature(n)
+    >>> my_little_world.add_actor(Actor('me'))
+    >>> my_little_world.add_actor(Actor('you'),0,1)
+    >>> my_little_world.configure_world(my_graphic_element)
+    ('me', 0, 0)
+    '''
+    CELL_SIZE=self.cell_size
+    [ each_actor.configure_actor(given_canvas, CELL_SIZE * x, CELL_SIZE * y) 
+      for x,each_row in enumerate(self.cell_grid) 
+      for y,each_actor in enumerate(each_row)]
+    
   def add_actor(self, given_actor, position_x= IS_ZERO, position_y= IS_ZERO):
     '''
     Put an actor into the world grid
@@ -107,7 +125,7 @@ class World:
     >>> my_little_world = World(2)
     >>> my_little_world.add_actor(Cell_Painter(),1)
     >>> my_little_world.draw_canvas(Drawing_Reporter())
-    ('me', 1, 0)
+    ('me', 50, 0)
     '''
     self.draw_world(given_canvas)
     [cell_to_paint.draw_canvas(given_canvas, x*self.cell_size, y*self.cell_size) 
@@ -122,7 +140,7 @@ class World:
     >>> my_little_world.draw_world = lambda  cnvs, x=0: cnvs.draw_feature('hi')
     >>> my_little_world.draw_canvas(Drawing_Reporter())
     hi
-    ('me', 1, 0)
+    ('me', 50, 0)
     '''
     pass
     
@@ -142,6 +160,8 @@ class Actor:
     '''
     self.image_face = set_image
 
+  def configure_actor(self, given_canvas, x, y):
+    given_canvas.create_element((self.image_face,x,y))
   def enter_world(self, set_world):
     '''
     Put the actor within a world
@@ -160,7 +180,7 @@ class Actor:
     >>> my_little_world.add_actor(my_little_actor)
     >>> my_little_actor.move_actor(1,1)
     >>> my_little_world.draw_canvas(Drawing_Reporter())
-    ('me', 1, 1)
+    ('me', 50, 50)
     '''
     the_current_world=self.actor_world
     the_current_world.remove_actor(self)
@@ -173,10 +193,10 @@ class Actor:
     >>> my_little_actor = Actor("isme")
     >>> my_little_world.add_actor(my_little_actor,1)
     >>> my_little_world.draw_canvas(Drawing_Reporter())
-    ('isme', 1, 0)
+    ('isme', 50, 0)
     '''
     self.draw_actor(given_canvas)
-    given_canvas.draw_feature((self.image_face,pos_x,pos_y))
+    #given_canvas.draw_feature((self.image_face,pos_x,pos_y))
 
   def draw_actor(self, given_canvas):
     '''
@@ -187,7 +207,7 @@ class Actor:
     >>> my_little_world.add_actor(my_little_actor,1)
     >>> my_little_world.draw_canvas(Drawing_Reporter())
     hi
-    ('me', 1, 0)
+    ('me', 50, 0)
     '''
     pass
     
