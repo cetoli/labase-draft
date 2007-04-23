@@ -156,7 +156,8 @@ class Coloured_Shaped_Block(Actor):
     >>> my_little_actor.image_face
     'actor.png'
     '''
-    self.image_face = set_image
+    Actor.__init__(self, set_image)
+    #self.image_face = set_image
 
   def move_actor(self,  position_x= IS_ZERO, position_y= IS_ZERO):
     '''

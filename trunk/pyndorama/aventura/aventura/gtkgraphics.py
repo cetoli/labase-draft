@@ -54,6 +54,11 @@ class GtkGui:
                            gtk.gdk.POINTER_MOTION_HINT_MASK )
       self.area.connect("expose-event", self.area_expose_cb)
       self.area.connect("configure_event", self.configure_event)
+      self.layout.connect("drag_data_received", self.receiveCallback)
+      self.layout.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
+                                  gtk.DEST_DEFAULT_HIGHLIGHT |
+                                  gtk.DEST_DEFAULT_DROP,
+                                  toCanvas, gtk.gdk.ACTION_COPY)
       
       self.client.configure_world(self)
 
@@ -94,6 +99,12 @@ class GtkGui:
               0, 0, width, height)
     self.client.draw_canvas(self)
     return False
+  def receiveCallback(self, 
+    widget, context, x, y, selection, targetType,  time):
+      if targetType == TARGET_TYPE_MOVE_ELEMENT:
+        self.do_drop(x,y,selection.data)
+  def do_drop(self,x,y,selection):
+    pass
   def do_draw(self):
     #self.area.queue_draw()
     self.layout.queue_draw_area(0, 0, 600, 600)
@@ -123,28 +134,11 @@ class Element(object):
     counter = 1
 
     def __init__(self, icon, name=None,Type='Name ',canvas=None, x=50, y=50):
-        self.Type = Type
         self.x    = int(x)
         self.y    = int(y)
-        self.selected = False
         self.canvas = canvas
         self.icon = icon
-        self.name = name or "%s%d" % (Type,self.counter)
         self.__class__.counter += 1
-        '''
-        # Create an Eventbox and an Image for drawing the name of the Element
-        # I choose to use an Image instead of a label because I need to change
-        # the background color.
-        self.Name_EventBox = gtk.EventBox()
-        self.Name_EventBox.set_border_width(0)
-        canvas.layout.put(self.Name_EventBox, self.x+self.DX, self.y+self.DY)
-        self.Name_EventBox.show()
-
-        self.NameBox = gtk.Image()
-        #self.draw_name()
-        self.NameBox.show()
-        self.Name_EventBox.add(self.NameBox)
-        '''
         # Create an Eventbox and an Image for the icon of the element
         self.Image_EventBox = gtk.EventBox()
         self.Image_EventBox.set_border_width(0)
@@ -168,48 +162,19 @@ class Element(object):
                                gtk.gdk.ACTION_COPY)
         
     def drag_begin_cb(self, widget, context):
-        # First we deselect all selected elts if the dragged element is not currently selelected
-        if not self.selected :
-            for n in self.canvas.EltList : n.deselect()
-            self.select()
-
-        widget.drag_source_set_icon_pixbuf(self.image)
-
-        return True
+      widget.drag_source_set_icon_pixbuf(self.image)
+      return True
 
     def drag_data_get_cb(self, widget, context, selection, targetType, time):
-        if targetType == TARGET_TYPE_MOVE_ELEMENT:
-            selection.set(selection.target, 8, "%d,%d,%d" % (self.x, self.y, id(self)))
+      if targetType == TARGET_TYPE_MOVE_ELEMENT:
+        selection.set(selection.target, 8, self.get_data())
+      return True
 
-        return True
+    def get_data(self):
+        return "%d"%id(self)
 
     def button_release_cb(self, widget, event):
-        if event.button == 1 and (event.x, event.y) != (0., 0.):
-            # button #1 was released but not during a drop
-            # -> select the element
-
-            if event.state & gtk.gdk.SHIFT_MASK :
-                self.select()
-
-            elif event.state & gtk.gdk.CONTROL_MASK :
-                if self.selected : self.deselect()
-                else             : self.select()
-
-            else :
-                for n in self.canvas.EltList : n.deselect()
-                self.select()
-
         return True
-
-    def select(self):
-        if not self.selected :
-            self.selected = True
-            #self.Image.set_from_pixbuf(icon_selected)
-
-    def deselect(self):
-        if self.selected :
-            self.selected = False
-            #self.Image.set_from_pixbuf(icon_normal)
 
     def move(self, x,y):
         self.x = int(x)
