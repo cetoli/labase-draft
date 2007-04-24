@@ -34,6 +34,14 @@ class GtkGui:
   """
   GUI usando Gtk.
   """
+  UI='''
+    <ui>
+        <popup name="GraphMenu">
+            <menuitem action="Novo_Jogo"/>
+        </popup>
+    </ui>
+    '''
+
   def __init__(self,client,title="Editor"):
       self.EltList = []
       self.screen = None
@@ -41,12 +49,30 @@ class GtkGui:
       window = gtk.Window(gtk.WINDOW_TOPLEVEL)
       window.set_title(title)
       window.connect("destroy", lambda w: gtk.main_quit())
+      
+      # Create the graph actions menu
+      uimanager = gtk.UIManager()
+      accelgroup = uimanager.get_accel_group()
+      window.add_accel_group(accelgroup)
+
+      # Actions
+      actiongroup = gtk.ActionGroup('Graph')
+      actiongroup.add_actions([
+          ('Novo_Jogo'  , None, 'Novo Jogo' , None, 'Inicia um novo Jogo' ,self.client.reset),
+      ])
+
+      uimanager.insert_action_group(actiongroup, 0)
+      uimanager.add_ui_from_string(self.UI)
+      self.GraphMenu = uimanager.get_widget('/GraphMenu')
+
       # Create the layout
+      
+      client_side = client.cell_size*client.grid_size
       self.layout = gtk.Layout()
-      self.layout.set_size_request(600, 600)
+      self.layout.set_size_request(client_side, client_side)
       self.layout.show()
       self.area = gtk.DrawingArea()
-      self.area.set_size_request(600, 600)
+      self.area.set_size_request(client_side, client_side)
       self.layout.add(self.area)
       #window.add(self.area)
       window.add(self.layout)
@@ -54,6 +80,7 @@ class GtkGui:
                            gtk.gdk.POINTER_MOTION_HINT_MASK )
       self.area.connect("expose-event", self.area_expose_cb)
       self.area.connect("configure_event", self.configure_event)
+      self.layout.connect('button-press-event', self.button_press_cb)
       self.layout.connect("drag_data_received", self.receiveCallback)
       self.layout.drag_dest_set(gtk.DEST_DEFAULT_MOTION |
                                   gtk.DEST_DEFAULT_HIGHLIGHT |
@@ -91,6 +118,11 @@ class GtkGui:
         
     return True
     
+  def button_press_cb(self, widget, event):
+      if event.button == 3:
+          self.GraphMenu.popup(None, None, None, event.button, event.time)
+          return True
+          
   def area_expose_cb(self, widget, event):
     x, y, width, height = event.area
     gc = self.gc = widget.get_style().fg_gc[gtk.STATE_NORMAL]
@@ -142,15 +174,18 @@ class Element(object):
         # Create an Eventbox and an Image for the icon of the element
         self.Image_EventBox = gtk.EventBox()
         self.Image_EventBox.set_border_width(0)
-        canvas.layout.put(self.Image_EventBox, self.x, self.y)
+        ###canvas.layout.put(self.Image_EventBox, self.x, self.y)
 
         self.Image  = gtk.Image()
         self.Image.set_from_file('images/'+icon)
         self.Image.show()
         self.Image_EventBox.add(self.Image)
         self.image = gtk.gdk.pixbuf_new_from_file('images/'+icon);
+        self.dx= (self.canvas.client.cell_size - self.image.get_width())/2
+        self.dy= (self.canvas.client.cell_size - self.image.get_height())/2
         #background,mask= image.render_pixmap_and_mask( 255 );
         self.Image_EventBox.shape_combine_mask(self.image.render_pixmap_and_mask()[1], 0, 0)
+        canvas.layout.put(self.Image_EventBox, self.x+self.dx, self.y+self.dy)
         self.Image_EventBox.show()
 
         # Signals and Drag'n'drop
@@ -179,7 +214,8 @@ class Element(object):
     def move(self, x,y):
         self.x = int(x)
         self.y = int(y)
-        self.canvas.layout.move(self.Image_EventBox, self.x   , self.y)
+        self.canvas.layout.move(
+          self.Image_EventBox, self.x+self.dx, self.y+self.dy)
 
     def delete(self):
         self.canvas.EltList.remove(self)
