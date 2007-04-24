@@ -101,6 +101,8 @@ class World:
       for x,each_row in enumerate(self.cell_grid) 
       for y,each_actor in enumerate(each_row)]
     
+  def reset(self, action):pass
+  
   def drop_hit(self, given_actor,pos_x,pos_y):
     '''
     Do something when drag and drop upon the actor

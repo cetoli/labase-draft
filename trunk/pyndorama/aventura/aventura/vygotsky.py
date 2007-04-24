@@ -19,7 +19,7 @@ __author__  = "Carlo E. T. Oliveira (cetoli@yahoo.com.br) $Author$"
 __version__ = "1.0 $Revision$"[10:-1]
 __date__    = "2007/4/16 $Date$"
 
-from graphic_world import World, Actor
+from graphic_world import World, Actor,Cell_Painter,Drawing_Reporter
 from random import randint
 
 IDEAL_GRID,IDEAL_CELL = 12,50
@@ -35,7 +35,7 @@ TK = ["s","f"]; # Thickness slim, fat
 CL = ["r","g","b","y"]; # Colous red, green, blue, yellow
 SP = ["c","t","s","p"]; # Shapes circle, triangle, square, pentagon
 SHAPES = [ a+b+c+d for a in SZ for b in TK for c in CL for d in SP];  
-
+"""
 class Cell_Painter:
   '''tester class to paint a cell'''
   def enter_world(self, given_world): pass
@@ -45,7 +45,7 @@ class Cell_Painter:
 class Drawing_Reporter:
   '''tester class to report drawing'''
   def draw_feature(self, given_feature): print given_feature
-
+"""
 class Vygotsky_World (World):
   '''
   Create a world with a grid and size
@@ -62,7 +62,9 @@ class Vygotsky_World (World):
     '''
     World.__init__(self)
     self.already_painted= False
-    self.blocks = SHAPES[:]
+    self.blocks = []
+    [self.blocks.append(Coloured_Shaped_Block(a_shape + ".png")) 
+      for a_shape in SHAPES]
     self.populate_world_with_blocks()
     
   def populate_world_with_blocks(self):
@@ -76,11 +78,9 @@ class Vygotsky_World (World):
     64
     '''
     self.remove_actors()
-    self.blocks = SHAPES[:]
+    random_blocks = self.blocks[:]
     def pick_a_random_block():
-      return Coloured_Shaped_Block(
-        self.blocks.pop(randint(0,len(self.blocks)-1)) + ".png"
-      )
+      return random_blocks.pop(randint(0,len(random_blocks)-1))
     a_side = range(2,10)
     [self.add_actor(pick_a_random_block(),x,y) for x in a_side for y in  a_side]
     #[self.add_actor(pick_a_random_block()) for x in SHAPES]
@@ -93,7 +93,7 @@ class Vygotsky_World (World):
     >>> my_little_world.draw_world = lambda  cnvs, x=0: cnvs.draw_feature('hi')
     >>> my_little_world.draw_canvas(Drawing_Reporter())
     hi
-    ('me', 1, 0)
+    ('me', 50, 0)
     '''
     def draw_Background(given_canvas):
       bg = given_canvas;
@@ -136,11 +136,11 @@ class Vygotsky_World (World):
     draw_Background(given_canvas)
     
 
-  def populate(self):
+  def reset(self, action):
     '''
     Create a collection of Coloured shapes
     '''
-    pass
+    self.populate_world_with_blocks()
     
 class Coloured_Shaped_Block(Actor):
   '''
@@ -158,7 +158,7 @@ class Coloured_Shaped_Block(Actor):
     '''
     Actor.__init__(self, set_image)
     #self.image_face = set_image
-
+  """
   def move_actor(self,  position_x= IS_ZERO, position_y= IS_ZERO):
     '''
     Remove the actor from its place and put in a new Position
@@ -172,6 +172,7 @@ class Coloured_Shaped_Block(Actor):
     the_current_world=self.actor_world
     the_current_world.remove_actor(self)
     the_current_world.add_actor(self, position_x, position_y)
+  """
     
     
 def _run_all_the_tests_in_the_documention():
