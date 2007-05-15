@@ -39,6 +39,7 @@ class Thing(object):
         self.value = self.wrap_long_text_to_fixed_width(value[-1])
         self.following = None
         self.finalizer = lambda: None
+        self.editor = lambda: None
     def setNext(self,next):
         self.following= next
     def additself(self,target):
@@ -193,9 +194,17 @@ class Z(Things):
       self.actions = {
       'QUIT':lambda self= self: self.dismiss(),
       'INVE':lambda self= self: self.report(),
-      'OLHE':lambda self= self: self.show()
+      'OLHE':lambda self= self: self.show(),
+      'XYZZ':lambda self= self: self.editAdventure(),	
       }
       
+    def editAdventure(self):
+      """finaliza aventura"""
+      global playadventure
+      playadventure=False
+      self.response= 'XXX --- A AVENTURA SERA EDITADA!!! --- XXX'
+      self.editor()
+      return self.response
     def play(self):
       """Continua a aventura enquanto pode."""
       #print 'Aventura'
@@ -405,8 +414,8 @@ def load(aventura='ave.yaml'):
   #return load_yaml(yaml.load(file('/home/carlo/Desktop/old/pyndorama/aventura/aventura/ave.yaml', 'r'))[0])
 
 
-  return load_yaml(yaml.load(file(aventura, 'r'))[0])
-  '''return load_yaml(yaml.load(file('/home/livia/labase-draft/pyndorama/aventura/aventura/'+aventura, 'r'))[0])'''
+  #return load_yaml(yaml.load(file(aventura, 'r'))[0])
+  return load_yaml(yaml.load(file('/home/livia/checkout/labase-draft/pyndorama/aventura/aventura/'+aventura, 'r'))[0])
 
 def load_yaml(thing):
   global g

@@ -25,17 +25,25 @@ class Root(controllers.RootController):
     @expose(template="aventura.templates.principal")
     def iniciar(self, adventure):
         # Session variable initialization (or recall if exists)
-        cherrypy.session['pindorama'] = aventura.load(adventure) 
-     
+        pindorama = aventura.load(adventure)
+        cherrypy.session['pindorama'] = pindorama
+        pindorama.finalizer = lambda self=self :self.finalizer()
+        pindorama.editor = lambda self=self :self.editor()
         # Variable assignment
-        pyndorama= cherrypy.session['pindorama']
         log.debug("Happy TurboGears Controller Responding For Duty")
         #pyndorama=aventura.load()
-        return dict(text=pyndorama.perform(''),
-            image=pyndorama.getImage())
+        return dict(text=pindorama.perform(''),
+            image=pindorama.getImage(), action='acao')
             
     @expose(template="aventura.templates.menu")
     def index(self):
+        aventuras = [('ave.yaml','A gralha e o jarro'),('labirinto.yaml','Labirinto')]
+        enviair_form = makeForm([aventuras])
+        log.debug("Happy TurboGears Controller Responding For Duty")
+        return dict(form=enviair_form)
+
+    @expose(template="aventura.templates.menu")
+    def menu(self, query):
         aventuras = [('ave.yaml','A gralha e o jarro'),('labirinto.yaml','Labirinto')]
         enviair_form = makeForm([aventuras])
         log.debug("Happy TurboGears Controller Responding For Duty")
@@ -45,8 +53,22 @@ class Root(controllers.RootController):
     def acao(self,query):
         #return dict(text=pyndorama.perform(''))
         pyndorama= cherrypy.session['pindorama']
+	self.current_action = "acao"
         return dict(text=pyndorama.processaQuery(query),
-            image=pyndorama.getImage())
+            image=pyndorama.getImage(), action=self.current_action)
+
+    @expose(template="aventura.templates.edit")
+    def edit(self,query):
+        pyndorama= cherrypy.session['pindorama']
+	self.current_action = "acao"
+        return dict(text=pyndorama.processaQuery(query),
+            image=pyndorama.getImage(), action=self.current_action)
+
+    def finalizer(self, action='menu'):
+	self.current_action = "menu"
+
+    def editor(self):
+	self.current_action = "edit"
             
             
     
