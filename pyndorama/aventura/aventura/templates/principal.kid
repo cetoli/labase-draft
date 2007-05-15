@@ -13,7 +13,7 @@
           ${text}
          </PRE>
          <img id="fableview" src='${image}'/>     
-    <form action="acao" method="POST">
+    <form action='${action}' method="POST">
       <div id="fableaction">
         <input  type="text" name="query" value=""/>
         <input type="submit" value="Ação!!!"/>        
