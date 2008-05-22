@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   viewBox="0 0 6700 2300"
+   id="svg7490"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docname="logo.svg"
+   sodipodi:docbase="/home/carlo/Desktop"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.0">
+  <metadata
+     id="metadata3724">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs7828">
+    <linearGradient
+       id="linearGradient2479">
+      <stop
+         style="stop-color:#ffffbd;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stop2480" />
+      <stop
+         style="stop-color:#ffaa45;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop2481" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2474">
+      <stop
+         style="stop-color:#ffffaf;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stop2475" />
+      <stop
+         style="stop-color:#ffaa45;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop2476" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2367">
+      <stop
+         style="stop-color:#d9632c;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stop2368" />
+      <stop
+         style="stop-color:#ffaa45;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop2369" />
+    </linearGradient>
+    <radialGradient
+       xlink:href="#linearGradient2367"
+       id="radialGradient2370"
+       cx="0.5"
+       cy="0.5"
+       r="0.91836625"
+       fx="0.5"
+       fy="0.5" />
+    <defs
+       id="defs7720">
+      <clipPath
+         id="clip2">
+        <polygon
+           points="847,1505 718,1296 684,1099 722,923 810,779 925,678 1077,617 1240,613 1383,659 1476,751 1497,807 1506,870 1504,934 1494,995 1388,901 1307,863 1247,859 1207,864 1162,874 1119,897 1082,927 1056,958 1130,941 1221,943 1315,979 1396,1066 1315,1057 1253,1046 1202,1037 1154,1038 1111,1046 1079,1059 1053,1077 1028,1103 980,1176 952,1267 936,1375 927,1503 896,1421 871,1274 884,1093 968,912 867,1019 825,1172 824,1343 847,1505 "
+           id="polygon7722" />
+      </clipPath>
+    </defs>
+    <linearGradient
+       xlink:href="#linearGradient2367"
+       id="linearGradient2471" />
+    <radialGradient
+       xlink:href="#linearGradient2474"
+       id="radialGradient2473"
+       cx="0.55468756"
+       cy="0.32812497"
+       r="0.7896803"
+       fx="0.56249934"
+       fy="0.34374923"
+       spreadMethod="pad"
+       gradientUnits="objectBoundingBox" />
+    <radialGradient
+       xlink:href="#linearGradient2479"
+       id="radialGradient2478"
+       cx="0.6875"
+       cy="0.421875"
+       r="0.65625"
+       fx="0.69531238"
+       fy="0.42187494"
+       gradientUnits="objectBoundingBox" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2479"
+       id="radialGradient2271"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(0.998275,1.001728)"
+       cx="1492.8101"
+       cy="988.3089"
+       fx="1506.3846"
+       fy="988.30878"
+       r="1140.2892" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2474"
+       id="radialGradient2273"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(0.9985077,1.0014946)"
+       spreadMethod="pad"
+       cx="1294.4952"
+       cy="1177.9824"
+       fx="1299.7258"
+       fy="1188.4442"
+       r="528.75836" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2367"
+       id="radialGradient2275"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(0.9600065,1.0416596)"
+       cx="1138.8022"
+       cy="996.30939"
+       fx="1138.8022"
+       fy="996.30939"
+       r="787.30243" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.4732669"
+     inkscape:cx="108.19324"
+     inkscape:cy="45.605478"
+     inkscape:window-width="1280"
+     inkscape:window-height="949"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:current-layer="svg7490"
+     width="48px"
+     height="48px" />
+  <g
+     id="g2204"
+     transform="matrix(3.8878397,0,0,3.8878397,-1134.3453,-3182.6439)">
+    <polyline
+       id="polyline7590"
+       style="fill:url(#radialGradient2271);stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1165,1994 891,1949 654,1826 467,1638 344,1400 300,1126 344,851 467,613 654,425 891,302 1165,258 1438,302 1675,425 1862,613 1985,851 2030,1126 1985,1400 1862,1638 1675,1826 1438,1949 1165,1994" />
+    <polyline
+       id="polyline7589"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1169,1664 957,1621 784,1504 667,1330 625,1119 667,907 784,734 957,616 1169,574 1380,616 1553,734 1670,907 1713,1119 1670,1330 1553,1504 1380,1621 1169,1664" />
+    <polyline
+       id="polyline7591"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="765,1598 627,1724 956,1915" />
+    <polyline
+       id="polyline7592"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1099,1935 1464,1890 1300,1714 1573,1586" />
+    <polyline
+       id="polyline7593"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1029,1923 894,1672 1163,1726 976,1792 1114,1815 1029,1923" />
+    <polyline
+       id="polyline7594"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1701,1730 1499,1862 1549,1744 1651,1672 1540,1755 1388,1726 1585,1639" />
+    <polyline
+       id="polyline7595"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="943,1858 800,1621 692,1726 874,1818 795,1689 768,1721" />
+    <polyline
+       id="polyline7596"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1353,1858 1223,1726 1119,1883 1300,1867 1235,1797 1210,1838" />
+    <polyline
+       id="polyline7597"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1642,1513 1768,1651 1960,1322" />
+    <polyline
+       id="polyline7598"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1977,1184 1934,821 1759,982 1632,709" />
+    <polyline
+       id="polyline7599"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1969,1252 1718,1384 1771,1113 1836,1302 1859,1168 1969,1252" />
+    <polyline
+       id="polyline7600"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1776,577 1909,779 1788,731 1718,628 1798,738 1771,892 1685,696" />
+    <polyline
+       id="polyline7601"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1904,1337 1665,1478 1771,1586 1866,1402 1733,1483 1764,1511" />
+    <polyline
+       id="polyline7602"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1904,927 1771,1053 1925,1161 1914,978 1841,1045 1884,1070" />
+    <polyline
+       id="polyline7603"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1567,650 1706,525 1378,331" />
+    <polyline
+       id="polyline7604"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1235,314 870,357 1032,532 760,660" />
+    <polyline
+       id="polyline7605"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1306,324 1437,573 1170,520 1358,457 1220,434 1306,324" />
+    <polyline
+       id="polyline7606"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="632,517 836,384 783,504 684,573 795,494 946,520 750,607" />
+    <polyline
+       id="polyline7607"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1392,389 1535,626 1640,520 1459,427 1540,560 1565,527" />
+    <polyline
+       id="polyline7608"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="982,389 1110,520 1215,366 1032,379 1099,452 1124,409" />
+    <polyline
+       id="polyline7609"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="690,708 566,568 373,899" />
+    <polyline
+       id="polyline7610"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="355,1040 400,1405 574,1244 702,1516" />
+    <polyline
+       id="polyline7611"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="366,972 616,839 562,1106 499,919 474,1056 366,972" />
+    <polyline
+       id="polyline7612"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="559,1642 426,1440 546,1491 616,1591 536,1480 562,1329 649,1528" />
+    <polyline
+       id="polyline7613"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="431,882 669,741 562,636 469,817 599,734 567,711" />
+    <polyline
+       id="polyline7614"
+       style="fill:none;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="431,1292 562,1168 408,1061 420,1244 494,1178 449,1151" />
+    <polyline
+       id="polyline7710"
+       style="fill:url(#radialGradient2273);fill-opacity:1;stroke:#000000;stroke-width:4.58611107;stroke-opacity:1"
+       points="1462,1513 1444,1530 1364,1574 1354,1541 1331,1473 1290,1377 1250,1337 1220,1339 1205,1370 1193,1422 1193,1480 1205,1535 1220,1603 1223,1618 1175,1628 1094,1628 1029,1613 977,1574 943,1516 928,1438 924,1347 936,1251 962,1161 1002,1078 1064,1013 1140,973 1230,962 1278,967 1326,980 1366,995 1388,1007 1412,1020 1490,1083 1550,1156 1585,1242 1588,1327 1565,1393 1540,1340 1497,1291 1456,1259 1417,1251 1399,1267 1401,1327 1432,1428 1457,1498 1462,1513" />
+    <polyline
+       transform="translate(37.8646,64.9997)"
+       id="polyline7718"
+       style="fill:#fca356;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       points="934,1505 892,1340 892,1189 934,1063 1019,977 1083,954 1158,954 1234,986 1301,1058 1207,1017 1132,1019 1072,1054 1021,1113 978,1185 950,1271 936,1376 934,1505" />
+    <path
+       id="path2366"
+       d="M 845.25766,1483.8152 C 802.2577,1414.1485 759.25762,1344.4819 716.25766,1274.8152 C 704.92435,1209.1485 693.59097,1143.4819 682.25766,1077.8152 C 694.92428,1019.1485 707.59099,960.48184 720.25766,901.81517 C 749.59099,853.81517 778.92433,805.81517 808.25766,757.81517 C 846.59099,724.1485 884.92433,690.48184 923.25766,656.81517 C 973.92433,636.48184 1024.591,616.14845 1075.2577,595.81517 C 1129.591,594.48184 1183.9244,593.1485 1238.2577,591.81517 C 1285.9244,607.14845 1333.591,622.48189 1381.2577,637.81517 C 1412.2577,668.48184 1443.2577,699.1485 1474.2577,729.81517 C 1481.2577,748.48184 1488.2577,767.1485 1495.2577,785.81517 C 1498.2577,806.81517 1501.2577,827.81517 1504.2577,848.81517 C 1503.5809,870.18247 1502.9404,891.55091 1502.2409,912.91749 C 1498.9132,933.2167 1495.5854,953.51594 1492.2577,973.81517 C 1456.9244,942.48181 1421.591,911.14853 1386.2577,879.81517 C 1359.2577,867.1485 1332.2577,854.48184 1305.2577,841.81517 C 1285.2577,840.48184 1265.2577,839.1485 1245.2577,837.81517 C 1231.1773,839.70187 1217.0225,841.07844 1202.9935,843.31836 C 1188.7482,846.4839 1174.503,849.64957 1160.2577,852.81517 C 1145.9244,860.48188 1131.591,868.14846 1117.2577,875.81517 C 1104.9244,885.8152 1092.591,895.81514 1080.2577,905.81517 C 1071.591,916.14848 1062.9244,926.48186 1054.2577,936.81517 C 1078.9244,931.14855 1103.591,925.48179 1128.2577,919.81517 C 1158.591,920.48184 1188.9244,921.1485 1219.2577,921.81517 C 1250.591,933.81522 1281.9244,945.81512 1313.2577,957.81517 C 1340.2577,986.81517 1367.2577,1015.8152 1394.2577,1044.8152 C 1366.8993,1041.7287 1339.5177,1038.8273 1312.1741,1035.6229 C 1274.8724,1028.9988 1237.5687,1022.3863 1200.2577,1015.8152 C 1184.2239,1016.1605 1168.189,1016.4608 1152.1558,1016.8342 C 1137.8564,1019.4945 1123.5571,1022.1549 1109.2577,1024.8152 C 1098.591,1029.1485 1087.9244,1033.4819 1077.2577,1037.8152 C 1068.571,1043.8458 1059.853,1049.8313 1051.1858,1055.8899 C 1042.766,1064.7792 1034.068,1073.4235 1025.8269,1082.4703 C 1009.9706,1106.5853 994.11407,1130.7003 978.25766,1154.8152 C 968.92428,1185.1485 959.59104,1215.4819 950.25766,1245.8152 C 944.92555,1282.1856 939.37262,1318.5273 934.18027,1354.9158 C 931.20606,1397.2156 928.23186,1439.5154 925.25766,1481.8152 C 914.92428,1454.4819 904.59104,1427.1485 894.25766,1399.8152 C 885.92433,1350.8152 877.59099,1301.8152 869.25766,1252.8152 C 873.59099,1192.4819 877.92433,1132.1485 882.25766,1071.8152 C 910.25771,1011.4819 938.25766,951.1485 966.25766,890.81517 C 932.59099,926.48184 898.92433,962.1485 865.25766,997.81517 C 851.25766,1048.8152 837.25766,1099.8152 823.25766,1150.8152 C 822.92433,1207.8152 822.59099,1264.8152 822.25766,1321.8152 C 829.92433,1375.8152 837.59099,1429.8152 845.25766,1483.8152 z "
+       style="fill:url(#radialGradient2275);fill-opacity:1;stroke:#000000" />
+  </g>
+</svg>
